@@ -28,15 +28,12 @@
 //	1) declare varying to receive input vertex color from vertex shader
 //	2) assign vertex color to output color
 
-out vec4 rtFragColor;
-
-uniform vec4 uColor;
+layout (location = 0) out vec4 rtFragColor;
 
 varying vec4 vColor; //#1
 
 void main()
-{
-	vColor = uColor; 
+{ 
 
 	rtFragColor = vColor; //#2
 }
