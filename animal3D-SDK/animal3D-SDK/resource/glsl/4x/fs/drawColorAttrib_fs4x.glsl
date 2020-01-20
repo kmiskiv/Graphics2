@@ -30,10 +30,13 @@
 
 out vec4 rtFragColor;
 
-in vec4 uColor;
+uniform vec4 uColor;
+
+varying vec4 vColor; //#1
 
 void main()
 {
-	// 
-	rtFragColor = 
+	vColor = uColor; 
+
+	rtFragColor = vColor; //#2
 }

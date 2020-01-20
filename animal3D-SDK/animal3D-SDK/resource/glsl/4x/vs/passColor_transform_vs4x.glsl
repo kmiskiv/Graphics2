@@ -33,8 +33,19 @@
 
 layout (location = 0) in vec4 aPosition;
 
+uniform mat4 uMVP; //#1 
+
+in vec4 aColor; // #3
+
+varying vec4 vColor; //#4
+
+
 void main()
 {
-	// DUMMY OUTPUT: directly assign input position to output position
-	gl_Position = aPosition;
+	gl_Position = uMVP * aPosition; // #2
+
+	aColor = vColor; //#5
+
+
+
 }
