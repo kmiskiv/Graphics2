@@ -24,14 +24,32 @@
 
 #version 410
 
+
 // ****TO-DO: 
 //	1) declare uniform variable for MVP matrix; see demo code for hint
 //	2) correctly transform input position by MVP matrix
 
 layout (location = 0) in vec4 aPosition;
 
+uniform mat4 uMVP; 
+//the correct declaration, do not need a layout/location
+//for 4.3 and up: layout (location = 0) uniform mat4 uMVP
+//all categories of data use different memory spaces 
+//ie an attribute versus an uniform use different memory spaces 
+//similar to doing offsets in assembly programming 
+//attributes are measured in 4 float slots
+//read the console!
+
+
+
 void main()
 {
-	// DUMMY OUTPUT: directly assign input position to output position
-	gl_Position = aPosition;
+
+	gl_Position = uMVP * aPosition;
+	//why is it this way and not aPosition * uMVP?
+	//order of operations for matrix multiplication 
+	//openGL is right-handed 
+	//input is always on the right, result is on the left. 
+	//first thing that happens is on the right, and then reads leftwards. 
+
 }
