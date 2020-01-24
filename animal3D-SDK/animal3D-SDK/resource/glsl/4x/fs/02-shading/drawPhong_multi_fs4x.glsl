@@ -22,6 +22,10 @@
 	Draw Phong shading model for multiple lights.
 */
 
+// REFERENCE = https://web.archive.org/web/20180814113122/http://sunandblackcat.com/tipFullView.php?l=eng&topicid=27&topic=Hatching-And-Gooch-Shading-GLSL//referenced code from taking this class 2 years ago 
+
+
+
 #version 410
 
 // ****TO-DO: 
@@ -31,10 +35,32 @@
 //	4) implement Phong shading model
 //	Note: test all data and inbound values before using them!
 
+
+//3) declare inbound varying data
+in vec3 vPassNormal; 
+in vec3 vPassLight; 
+in vec3 vPassView; 
+in vec2 vPassTexcoord; 
+
+
+//declare uniform variable for textures 
+//dm for diffuse map 
+uniform sampler2D uTex_dm; 
+
+//sm at the end because it's a specular map; 
+uniform sampler2D uTex_sm; 
+
 out vec4 rtFragColor;
 
 void main()
 {
+
+
+
 	// DUMMY OUTPUT: all fragments are OPAQUE GREEN
 	rtFragColor = vec4(0.0, 1.0, 0.0, 1.0);
+
+
+
+
 }

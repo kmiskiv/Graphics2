@@ -38,6 +38,9 @@
 //	10+) see instructions in passTexcoord...vs4x.glsl for information on 
 //		how to handle the texture coordinate
 
+
+
+
 layout (location = 0) in vec4 aPosition;
 
 void main()
