@@ -31,10 +31,54 @@
 //	4) implement Lambert shading model
 //	Note: test all data and inbound values before using them!
 
+
+//from lambert vertex shader, but now inputs to fragment
+in vec3 vPassNormal; 
+in vec3 vPassLight; 
+in vec2 vPassTextcoord; 
+
+
+//from texture fragment shader 
+uniform sampler2D uText; 
+
+
 out vec4 rtFragColor;
 
 void main()
 {
 	// DUMMY OUTPUT: all fragments are OPAQUE RED
-	rtFragColor = vec4(1.0, 0.0, 0.0, 1.0);
+	//rtFragColor = vec4(1.0, 0.0, 0.0, 1.0);
+
+
+	//3) grab sample from texture 
+	vec4 diffuseSample = texture(uText, vPassTextcoord); 
+
+
+	// 4) calculate diffuse coefficient 
+	vec3 L = normalize (vPassLight); 
+	vec3 N = normalize (vPassNormal); 
+	float diffuse = dot (N, L); 
+
+
+	// calculate Labertian shading model 
+	// shading * color 
+	vec3 Lambert = diffuse * diffuseSample.rgb; 
+
+
+	//assign result to output color 
+	rtFragColor = vec4(Lambert, diffuseSample.a); 
+
+
+	// DEBUGGING // 
+
+	//rtFragColor = vec4(diffuse, diffuse, diffuse, 1.0); 
+
+	//takes range of -1 to 1 and converts it to range of 0 to 1
+	//takes the normal and converts it to color 
+	//this allows you to visualize data as color 
+	//rtFragColor = vec4(N.xyz * 0.5 + 0.5, 1.0); 
+
+	// can visualize light data as well
+	//rtFragColor = vec4(L.xyz * 0.5 + 0.5, 1.0); 
+
 }
