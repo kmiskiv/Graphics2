@@ -38,7 +38,7 @@ uniform mat4 uMVP;
 
 //how do we get the color to move forward to the next stage?
 //v for varying
-out vec4 vColor; 
+out vec4 vPassColor;  
 
 
 void main()
@@ -47,5 +47,5 @@ void main()
 	//gl_Position = aPosition;
 	
 	gl_Position = uMVP * aPosition; 
-	vColor = aColor; 
+	vPassColor = aColor; 
 }

@@ -40,6 +40,9 @@ in vec2 vPassTextcoord;
 
 void main()
 {
+
+
+
 	// DUMMY OUTPUT: all fragments are OPAQUE WHITE
 	//rtFragColor = vec4(1.0, 1.0, 1.0, 1.0);
 
@@ -48,5 +51,10 @@ void main()
 
 	//4) assign sample to output color 
 	rtFragColor = diffuseSample;
+
+	// DEBUGGING //
+
+	//rtFragColor = vec4(vPassTextcoord, 0.0, 1.0); 
+
 
 }

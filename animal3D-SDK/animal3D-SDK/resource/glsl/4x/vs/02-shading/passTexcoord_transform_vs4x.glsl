@@ -39,10 +39,10 @@ layout (location = 0) in vec4 aPosition;
 uniform mat4 uMVP;
 
 //3) declare texture coordinate attribute
-layout (location = 8) in vec2 inTextCoord; 
+layout (location = 8) in vec4 inTextCoord; 
 
 //4) declare atlas transform
-uniform mat2 uAtlas;
+uniform mat4 uAtlas;
 
 //5) declare texture coordinate outbound varying
 out vec2 vPassTextcoord; 
@@ -57,6 +57,6 @@ void main()
 	gl_Position = uMVP * aPosition; 
 
 	//6) correctly transform input texture coordinate by atlas matrix
-	vPassTextcoord = uAtlas * inTextCoord; 
+	vPassTextcoord = (uAtlas * inTextCoord).xy; 
 
 }
