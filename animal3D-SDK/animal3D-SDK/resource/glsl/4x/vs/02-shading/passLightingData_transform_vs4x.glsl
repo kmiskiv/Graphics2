@@ -40,11 +40,46 @@
 
 
 
-
+//is a vec4 because it has a w value, which is 1
 layout (location = 0) in vec4 aPosition;
+
+//1) declare uniform variable for MV matrix
+uniform mat4 uMV; 
+
+
+
+//2) declare view position as outbound varying
+layout (location = ?) out vec4 viewPos;
+
+//4) declare uniform variable for P matrix
+uniform mat4 pMatrix;
+
+6) declare normal attribute 
+//??????
+
+7) declare MV matrix for normals
+//????
+
+8) declare outbound normal 
+//??????
 
 void main()
 {
 	// DUMMY OUTPUT: directly assign input position to output position
-	gl_Position = aPosition;
+	//gl_Position = aPosition;
+
+	//3) correctly transform input position by MV matrix to get view position
+	viewPos = uMV * aPosition; 
+
+	//5) correctly transform view position by P matrix to get final position 
+	vec4 finalPos = viewPos * pMatrix; 
+
+
+	//9) correctly  transform input normal by MV normal matrix
+	//????
+
+	//10) handle texture coordinate 
+	//??????
+
+
 }

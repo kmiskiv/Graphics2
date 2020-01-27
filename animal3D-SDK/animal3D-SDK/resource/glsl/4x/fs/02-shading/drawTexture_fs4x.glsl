@@ -41,11 +41,6 @@ in vec2 vPassTextcoord;
 void main()
 {
 
-
-
-	// DUMMY OUTPUT: all fragments are OPAQUE WHITE
-	//rtFragColor = vec4(1.0, 1.0, 1.0, 1.0);
-
 	//3) sample texture using texture coordinate 
 	vec4 diffuseSample = texture(uText, vPassTextcoord); 
 
@@ -57,4 +52,6 @@ void main()
 	//rtFragColor = vec4(vPassTextcoord, 0.0, 1.0); 
 
 
+	// DUMMY OUTPUT: all fragments are OPAQUE WHITE
+	//rtFragColor = vec4(1.0, 1.0, 1.0, 1.0);
 }

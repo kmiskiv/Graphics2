@@ -39,7 +39,7 @@ in vec2 vPassTextcoord;
 
 
 //from texture fragment shader 
-uniform sampler2D uText; 
+uniform sampler2D uTex_dm; 
 
 
 out vec4 rtFragColor;
@@ -51,7 +51,7 @@ void main()
 
 
 	//3) grab sample from texture 
-	vec4 diffuseSample = texture(uText, vPassTextcoord); 
+	vec4 diffuseSample = texture(uTex_dm, vPassTextcoord); 
 
 
 	// 4) calculate diffuse coefficient 

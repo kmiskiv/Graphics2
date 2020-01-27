@@ -22,7 +22,8 @@
 	Draw Phong shading model for multiple lights.
 */
 
-// REFERENCE = https://web.archive.org/web/20180814113122/http://sunandblackcat.com/tipFullView.php?l=eng&topicid=27&topic=Hatching-And-Gooch-Shading-GLSL//referenced code from taking this class 2 years ago 
+// REFERENCE = https://web.archive.org/web/20180814113122/http://sunandblackcat.com/tipFullView.php?l=eng&topicid=27&topic=Hatching-And-Gooch-Shading-GLSL
+//referenced code from taking this class 2 years ago 
 
 
 
@@ -43,7 +44,7 @@ in vec3 vPassView;
 in vec2 vPassTexcoord; 
 
 
-//declare uniform variable for textures 
+// 1) declare uniform variable for textures 
 //dm for diffuse map 
 uniform sampler2D uTex_dm; 
 
@@ -54,13 +55,42 @@ out vec4 rtFragColor;
 
 void main()
 {
+		//4) implement Phong shading model
+
+		//grab sample from texture 
+		vec4 diffuseSample = texture(uTex_dm, vPassTexcoord); 
+		vec4 specularSample = texture(uTex_sm, vPassTexcoord); 
+
+		//DIFFUSE 
+
+		//normalize the vectors 
+		vec3 L = normalize(vPassLight); 
+		vec3 N = normalize(vPassNormal); 
 
 
+		//get value from [-1, 1]
+		float diffuse = dot (N, L); 
 
+		//clamp to get rid of negative numbers 
+		diffuse = max(0.0, diffuse); 
+
+		//map diffuse value from [-1, 1] to [0, 1]
+		diffuse = serialize(diffuse); 
+
+
+		//SPECULAR 
+		vec3 V = normalize(vPassView); 
+
+		//formula = 2( N dot L) N - L
+		vec3 R = (diffuse + diffuse) * (N - L); 
+		
+		float specular = dot (V, R); 
+
+		//clamp specular to get rid of negative numbers 
+		specular = max(0.0, specular); 
+
+	
 	// DUMMY OUTPUT: all fragments are OPAQUE GREEN
-	rtFragColor = vec4(0.0, 1.0, 0.0, 1.0);
-
-
-
+	//rtFragColor = vec4(0.0, 1.0, 0.0, 1.0);
 
 }
