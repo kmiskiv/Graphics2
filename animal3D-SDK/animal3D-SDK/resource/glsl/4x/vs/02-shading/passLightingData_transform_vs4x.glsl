@@ -49,18 +49,18 @@ uniform mat4 uMV;
 
 
 //2) declare view position as outbound varying
-layout (location = ?) out vec4 viewPos;
+layout (location = 1) out vec4 viewPos;
 
 //4) declare uniform variable for P matrix
 uniform mat4 pMatrix;
 
-6) declare normal attribute 
+//6) declare normal attribute 
 //??????
 
-7) declare MV matrix for normals
+//7) declare MV matrix for normals
 //????
 
-8) declare outbound normal 
+//8) declare outbound normal 
 //??????
 
 void main()

@@ -41,6 +41,15 @@ uniform float uAlpha;
 uniform float uBeta; 
 
 
+in vec3 vPassNormal; 
+in vec3 vPassLight; 
+in vec3 vPassView; 
+in vec2 vPassTexcoord; 
+
+uniform sampler2D uTex_dm; 
+//sm at the end because it's a specular map; 
+uniform sampler2D uTex_sm; 
+
 void main()
 {
 	// DUMMY OUTPUT: all fragments are OPAQUE BLUE
@@ -51,7 +60,7 @@ void main()
 	vec4 diffuseSample = texture(uTex_dm, vPassTexcoord); 
 	vec4 specularSample = texture(uTex_sm, vPassTexcoord);
 
-	//DIFFUSE
+	/// DIFFUSE ///
 	//normalize the vectors 
 	 vec3 L = normalize(vPassLight); 
 	 vec3 N = normalize (vPassNormal);
@@ -75,13 +84,13 @@ void main()
 	vec3 coolColorMix = coolColor + uColor * uAlpha; 
 
 	//mix in warm colors 
-	vec3 warmColorMix = warmCOlor + uColor * uBeta; 
+	vec3 warmColorMix = warmColor + uColor * uBeta; 
 
 	//now, interpolate the cool and warm colors depending on the lighting intensity
 	//lower intensity = more cool colors 
 	vec3 colorOut = mix(coolColorMix, warmColorMix, diffuse); 
 
-
+	rtFragColor = vec4(colorOut, 1.0); 
 
 	/// DEBUGGING ///
 

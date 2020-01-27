@@ -75,7 +75,7 @@ void main()
 		diffuse = max(0.0, diffuse); 
 
 		//map diffuse value from [-1, 1] to [0, 1]
-		diffuse = serialize(diffuse); 
+		//diffuse = serialize(diffuse); 
 
 
 		//SPECULAR 
