@@ -46,22 +46,38 @@ layout (location = 0) in vec4 aPosition;
 //1) declare uniform variable for MV matrix
 uniform mat4 uMV; 
 
-
-
 //2) declare view position as outbound varying
-layout (location = 1) out vec4 viewPos;
+out vec4 viewPos;
 
 //4) declare uniform variable for P matrix
-uniform mat4 pMatrix;
+uniform mat4 uP;
 
 //6) declare normal attribute 
-//??????
+layout (location = 2) in vec3 aNormal; 
 
 //7) declare MV matrix for normals
-//????
+uniform mat3 uMV_nrm; 
 
 //8) declare outbound normal 
-//??????
+out vec3 vPassNormal; 
+
+//declare Atlas transform
+uniform mat4 uAtlas; 
+
+//declare texture coordinate outbound varying
+out vec2 vPassTextcoord; 
+
+//declare texture coordinate attribute 
+layout (location = 8) in vec4 inTextCoord; 
+
+//declare uMVP matrix
+uniform mat4 uMVP; 
+
+out vec3 vPassLight; 
+
+//declare uniforms for variables in code pertinent to lighting
+//one of the standard uniform names 
+uniform vec4 uLightPos_obj; 
 
 void main()
 {
@@ -72,14 +88,17 @@ void main()
 	viewPos = uMV * aPosition; 
 
 	//5) correctly transform view position by P matrix to get final position 
-	vec4 finalPos = viewPos * pMatrix; 
+		vec4 finalPos = uP * viewPos; 
 
 
 	//9) correctly  transform input normal by MV normal matrix
-	//????
+	vPassNormal = uMV_nrm * aNormal; 
 
 	//10) handle texture coordinate 
-	//??????
 
-
+		//correctly transform input texture coordinate by atlas matrix 
+		vPassTextcoord = (uAtlas * inTextCoord).xy;
+	
+	
+	 gl_Position = finalPos; 
 }

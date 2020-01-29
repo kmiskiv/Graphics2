@@ -33,21 +33,59 @@
 
 
 //from lambert vertex shader, but now inputs to fragment
+
+//1) declare uniform variable for texture
+//from texture fragment shader 
+ uniform sampler2D uTex_dm; 
+
+ //2) declare uniform variables for lights
+ uniform float uLightCt; 
+ uniform float uLightSz; 
+ uniform float uLightSzInvSq; 
+ uniform vec4 uLightPos; 
+ uniform vec4 uLightCol; 
+
+
+ //3) declare inbound varying data
+//want a normal, position in viewspace, and textcoord from previous shader
+in vec4 viewPos; 
 in vec3 vPassNormal; 
-in vec3 vPassLight; 
 in vec2 vPassTextcoord; 
 
 
-//from texture fragment shader 
-uniform sampler2D uTex_dm; 
 
 
 out vec4 rtFragColor;
 
 void main()
 {
+		//DEBUGGING // 
+	
+	//WORKS
+	//rtFragColor = viewPos; 
+
+	//DOES NOT WORK 
+	//rtFragColor = vec4(vPassNormal, 1.0);
+
+	//WORKS
+	//rtFragColor = vec4(uLightCt, 1.0, 1.0, 1.0);
+
+	//WORKS
+	rtFragColor = vec4(uLightSz, 1.0, 1.0, 1.0);
+
+	//WORKS
+	rtFragColor = vec4(uLightSzInvSq, 1.0, 1.0, 1.0);
+
+	//WORKS
+	//rtFragColor = uLightCol;
+
+	//DOES NOT WORK
+	//rtFragColor = uLightPos; 
+
 	// DUMMY OUTPUT: all fragments are OPAQUE RED
 	//rtFragColor = vec4(1.0, 0.0, 0.0, 1.0);
+
+	
 
 
 	//3) grab sample from texture 
@@ -55,9 +93,9 @@ void main()
 
 
 	// 4) calculate diffuse coefficient 
-	vec3 L = normalize (vPassLight); 
-	vec3 N = normalize (vPassNormal); 
-	float diffuse = dot (N, L); 
+	vec3 L = normalize(uLightPos.xyz); 
+	vec3 N = normalize(vPassNormal); 
+	float diffuse = dot(N, L); 
 
 
 	// calculate Labertian shading model 
@@ -71,7 +109,7 @@ void main()
 
 	// DEBUGGING // 
 
-	//rtFragColor = vec4(diffuse, diffuse, diffuse, 1.0); 
+	rtFragColor = vec4(diffuse, diffuse, diffuse, 1.0); 
 
 	//takes range of -1 to 1 and converts it to range of 0 to 1
 	//takes the normal and converts it to color 
@@ -80,5 +118,7 @@ void main()
 
 	// can visualize light data as well
 	//rtFragColor = vec4(L.xyz * 0.5 + 0.5, 1.0); 
+
+
 
 }

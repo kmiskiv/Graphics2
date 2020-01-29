@@ -46,6 +46,8 @@ in vec3 vPassLight;
 in vec3 vPassView; 
 in vec2 vPassTexcoord; 
 
+
+
 uniform sampler2D uTex_dm; 
 //sm at the end because it's a specular map; 
 uniform sampler2D uTex_sm; 
@@ -53,7 +55,7 @@ uniform sampler2D uTex_sm;
 void main()
 {
 	// DUMMY OUTPUT: all fragments are OPAQUE BLUE
-	rtFragColor = vec4(0.0, 0.0, 1.0, 1.0);
+	//rtFragColor = vec4(0.0, 0.0, 1.0, 1.0);
 
 	
 	 ///grab sample from texture
