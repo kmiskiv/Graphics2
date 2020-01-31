@@ -41,7 +41,7 @@ uniform float uAlpha;
 uniform float uBeta; 
 
 
-in vec3 vPassNormal; 
+in vec4 vPassNormal; 
 in vec3 vPassLight; 
 in vec3 vPassView; 
 in vec2 vPassTexcoord; 
@@ -65,7 +65,7 @@ void main()
 	/// DIFFUSE ///
 	//normalize the vectors 
 	 vec3 L = normalize(vPassLight); 
-	 vec3 N = normalize (vPassNormal);
+	 vec3 N = normalize (vPassNormal.xyz);
 	 //get value from [-1, 1]
 	 float diffuse = dot (N, L); 
 

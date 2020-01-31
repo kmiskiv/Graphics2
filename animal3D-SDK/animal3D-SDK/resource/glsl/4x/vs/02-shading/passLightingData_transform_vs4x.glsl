@@ -53,13 +53,13 @@ out vec4 viewPos;
 uniform mat4 uP;
 
 //6) declare normal attribute 
-layout (location = 2) in vec3 aNormal; 
+layout (location = 2) in vec4 aNormal; 
 
 //7) declare MV matrix for normals
-uniform mat3 uMV_nrm; 
+uniform mat4 uMV_nrm; 
 
 //8) declare outbound normal 
-out vec3 vPassNormal; 
+out vec4 vPassNormal; 
 
 //declare Atlas transform
 uniform mat4 uAtlas; 

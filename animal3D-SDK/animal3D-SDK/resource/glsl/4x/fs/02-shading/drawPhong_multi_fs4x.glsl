@@ -61,21 +61,35 @@ void main()
 		vec4 diffuseSample = texture(uTex_dm, vPassTexcoord); 
 		vec4 specularSample = texture(uTex_sm, vPassTexcoord); 
 
-		//DIFFUSE 
-
-		//normalize the vectors 
-		vec3 L = normalize(vPassLight); 
-		vec3 N = normalize(vPassNormal); 
+		//3) grab sample from texture 
+	vec4 diffuseSample = texture(uTex_dm, vPassTextcoord); 
 
 
-		//get value from [-1, 1]
-		float diffuse = dot (N, L); 
+	// 4) calculate diffuse coefficient 
+	//vec3 L = normalize(uLightPos[0].xyz); 
+	vec3 N = normalize(vPassNormal.xyz); 
+	//float diffuse = dot(N, L); 
+	vec3 diffuseTotal = vec3(0.0); 
 
-		//clamp to get rid of negative numbers 
-		diffuse = max(0.0, diffuse); 
+	//the light loop
+	for (int i = 0; i < uLightCt; i++)
+	{
+		vec3 L = normalize(uLightPos[i].xyz - viewPos.xyz);
+		float diffuse = dot (N, L);	
+		diffuse = max(diffuse, 0.0);
+		diffuseTotal += diffuse * uLightCol[i].rgb;
 
-		//map diffuse value from [-1, 1] to [0, 1]
-		//diffuse = serialize(diffuse); 
+		//calculate the reflection vector, diffuse constant, specular constant 
+	}
+
+
+	// calculate Labertian shading model 
+	// shading * color 
+	vec3 Lambert = diffuseTotal * diffuseSample.rgb; 
+
+
+	//assign result to output color 
+	rtFragColor = vec4(Lambert, diffuseSample.a); 
 
 
 		//SPECULAR 
@@ -89,8 +103,13 @@ void main()
 		//clamp specular to get rid of negative numbers 
 		specular = max(0.0, specular); 
 
-	
-	// DUMMY OUTPUT: all fragments are OPAQUE GREEN
-	//rtFragColor = vec4(0.0, 1.0, 0.0, 1.0);
+
+		//put together in a similar fashion as you put together diffuse 
+		// 	PHONG
+	//phong is the sum of diffuse, specular and ambient components. 
+	vec3 Phong = (diffuseTotal * diffuseSample.rgb) 
+				  + (specular * specularSample.rgb)
+				+  vec3(0.01, 0.0, 0.02); 
+
 
 }

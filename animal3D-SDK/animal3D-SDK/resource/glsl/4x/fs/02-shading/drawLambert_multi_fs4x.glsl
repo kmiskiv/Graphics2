@@ -39,17 +39,17 @@
  uniform sampler2D uTex_dm; 
 
  //2) declare uniform variables for lights
- uniform float uLightCt; 
- uniform float uLightSz; 
- uniform float uLightSzInvSq; 
- uniform vec4 uLightPos; 
- uniform vec4 uLightCol; 
+ uniform int uLightCt; 
+ uniform float uLightSz[4]; 
+ uniform float uLightSzInvSq[4]; 
+ uniform vec4 uLightPos[4]; 
+ uniform vec4 uLightCol[4]; 
 
 
  //3) declare inbound varying data
 //want a normal, position in viewspace, and textcoord from previous shader
 in vec4 viewPos; 
-in vec3 vPassNormal; 
+in vec4 vPassNormal; 
 in vec2 vPassTextcoord; 
 
 
@@ -71,10 +71,10 @@ void main()
 	//rtFragColor = vec4(uLightCt, 1.0, 1.0, 1.0);
 
 	//WORKS
-	rtFragColor = vec4(uLightSz, 1.0, 1.0, 1.0);
+	//rtFragColor = vec4(uLightSz, 1.0, 1.0, 1.0);
 
 	//WORKS
-	rtFragColor = vec4(uLightSzInvSq, 1.0, 1.0, 1.0);
+	//rtFragColor = vec4(uLightSzInvSq, 1.0, 1.0, 1.0);
 
 	//WORKS
 	//rtFragColor = uLightCol;
@@ -93,14 +93,26 @@ void main()
 
 
 	// 4) calculate diffuse coefficient 
-	vec3 L = normalize(uLightPos.xyz); 
-	vec3 N = normalize(vPassNormal); 
-	float diffuse = dot(N, L); 
+	//vec3 L = normalize(uLightPos[0].xyz); 
+	vec3 N = normalize(vPassNormal.xyz); 
+	//float diffuse = dot(N, L); 
+	vec3 diffuseTotal = vec3(0.0); 
+
+
+	for (int i = 0; i < uLightCt; i++)
+	{
+		vec3 L = normalize(uLightPos[i].xyz - viewPos.xyz);
+		float diffuse = dot (N, L);	
+		diffuse = max(diffuse, 0.0);
+		diffuseTotal += diffuse * uLightCol[i].rgb; 
+	}
+
+
 
 
 	// calculate Labertian shading model 
 	// shading * color 
-	vec3 Lambert = diffuse * diffuseSample.rgb; 
+	vec3 Lambert = diffuseTotal * diffuseSample.rgb; 
 
 
 	//assign result to output color 
@@ -109,7 +121,7 @@ void main()
 
 	// DEBUGGING // 
 
-	rtFragColor = vec4(diffuse, diffuse, diffuse, 1.0); 
+	//rtFragColor = vec4(diffuse, diffuse, diffuse, 1.0); 
 
 	//takes range of -1 to 1 and converts it to range of 0 to 1
 	//takes the normal and converts it to color 
