@@ -24,6 +24,7 @@
 
 #version 410
 
+
 // ****TO-DO: 
 //	1) declare uniform variable for texture; see demo code for hints
 //	2) declare uniform variables for lights; see demo code for hints
@@ -31,10 +32,107 @@
 //	4) implement Lambert shading model
 //	Note: test all data and inbound values before using them!
 
+
+//from lambert vertex shader, but now inputs to fragment
+
+//1) declare uniform variable for texture
+//from texture fragment shader 
+ uniform sampler2D uTex_dm; 
+
+ //2) declare uniform variables for lights
+ uniform int uLightCt; 
+ uniform float uLightSz[4]; 
+ uniform float uLightSzInvSq[4]; 
+ uniform vec4 uLightPos[4]; 
+ uniform vec4 uLightCol[4]; 
+
+
+ //3) declare inbound varying data
+//want a normal, position in viewspace, and textcoord from previous shader
+in vec4 viewPos; 
+in vec4 vPassNormal; 
+in vec2 vPassTextcoord; 
+
+
+
+
 out vec4 rtFragColor;
 
 void main()
 {
+		//DEBUGGING // 
+	
+	//WORKS
+	//rtFragColor = viewPos; 
+
+	//DOES NOT WORK 
+	//rtFragColor = vec4(vPassNormal, 1.0);
+
+	//WORKS
+	//rtFragColor = vec4(uLightCt, 1.0, 1.0, 1.0);
+
+	//WORKS
+	//rtFragColor = vec4(uLightSz, 1.0, 1.0, 1.0);
+
+	//WORKS
+	//rtFragColor = vec4(uLightSzInvSq, 1.0, 1.0, 1.0);
+
+	//WORKS
+	//rtFragColor = uLightCol;
+
+	//DOES NOT WORK
+	//rtFragColor = uLightPos; 
+
 	// DUMMY OUTPUT: all fragments are OPAQUE RED
-	rtFragColor = vec4(1.0, 0.0, 0.0, 1.0);
+	//rtFragColor = vec4(1.0, 0.0, 0.0, 1.0);
+
+	
+
+
+	//3) grab sample from texture 
+	vec4 diffuseSample = texture(uTex_dm, vPassTextcoord); 
+
+
+	// 4) calculate diffuse coefficient 
+	//vec3 L = normalize(uLightPos[0].xyz); 
+	vec3 N = normalize(vPassNormal.xyz); 
+	//float diffuse = dot(N, L); 
+	vec3 diffuseTotal = vec3(0.0); 
+
+
+	for (int i = 0; i < uLightCt; i++)
+	{
+		vec3 L = normalize(uLightPos[i].xyz - viewPos.xyz);
+		float diffuse = dot (N, L);	
+		diffuse = max(diffuse, 0.0);
+		diffuseTotal += diffuse * uLightCol[i].rgb; 
+	}
+
+
+
+
+	// calculate Labertian shading model 
+	// shading * color 
+	vec3 Lambert = diffuseTotal * diffuseSample.rgb; 
+
+
+	//assign result to output color 
+	rtFragColor = vec4(Lambert, diffuseSample.a); 
+
+
+	// DEBUGGING // 
+
+	//rtFragColor = vec4(diffuse, diffuse, diffuse, 1.0); 
+
+	//takes range of -1 to 1 and converts it to range of 0 to 1
+	//takes the normal and converts it to color 
+	//this allows you to visualize data as color 
+	//rtFragColor = vec4(N.xyz * 0.5 + 0.5, 1.0); 
+
+	// can visualize light data as well
+	//rtFragColor = vec4(L.xyz * 0.5 + 0.5, 1.0); 
+
+
+
 }
+
