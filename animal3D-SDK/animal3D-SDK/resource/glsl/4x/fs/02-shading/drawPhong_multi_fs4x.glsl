@@ -21,12 +21,6 @@
 	drawPhong_multi_fs4x.glsl
 	Draw Phong shading model for multiple lights.
 */
-
-// REFERENCE = https://web.archive.org/web/20180814113122/http://sunandblackcat.com/tipFullView.php?l=eng&topicid=27&topic=Hatching-And-Gooch-Shading-GLSL
-//referenced code from taking this class 2 years ago 
-
-
-
 #version 410
 
 // ****TO-DO: 
@@ -75,7 +69,8 @@ void main()
 	 
 	vec3 diffuseTotal = vec3(0.0); 
 	vec3 specularTotal = vec3(0.0); 
-
+	//SPECULAR 
+	vec3 V = normalize(vPassView); 
 
 	//the light loop
 	for (int i = 0; i < uLightCt; i++)
@@ -91,8 +86,7 @@ void main()
 		//formula = 2( N dot L) N - L
 		vec3 R = (diffuse + diffuse) * (N - L); 
 
-		//SPECULAR 
-		vec3 V = normalize(vPassView); 
+		
 		
 		
 		float specular = dot (V, R); 
@@ -102,7 +96,7 @@ void main()
 		specular = max(0.0, specular); 
 
 		specularTotal += specular * uLightCol[i].rgb; 
-
+	}
 
 	//put together in a similar fashion as you put together diffuse 
 		// 	PHONG
