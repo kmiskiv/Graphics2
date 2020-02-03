@@ -33,8 +33,31 @@
 
 out vec4 rtFragColor;
 
+//1) declare uniform variable for texture
+uniform sampler2D uTex_dm; 
+
+uniform double uTime; 
+
+//2) declare inbound varying for texture coordinate 
+in vec2 vPassTextcoord; 
+
+
+
 void main()
 {
 	// DUMMY OUTPUT: all fragments are OPAQUE DARK GREY
-	rtFragColor = vec4(0.2, 0.2, 0.2, 1.0);
+	//rtFragColor = vec4(0.2, 0.2, 0.2, 1.0);
+
+	//3) modify texture coordinate in some creative way
+		vec2 modifiedTexture = vPassTextcoord * vec2(uTime, uTime); 
+	
+	//4) sample texture using modified texture coordinate 
+	vec4 diffuseSample = texture(uTex_dm, modifiedTexture); 
+
+	rtFragColor = diffuseSample; 
+
+
 }
+
+
+
