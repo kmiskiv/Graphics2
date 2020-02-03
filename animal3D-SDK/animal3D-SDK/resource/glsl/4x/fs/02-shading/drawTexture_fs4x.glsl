@@ -33,7 +33,7 @@
 out vec4 rtFragColor;
 
 //1) delcare uniform variable for texture
-uniform sampler2D uText; 
+uniform sampler2D uTex_dm; 
 
 //2) declare inbound varying for texture coordinate 
 in vec2 vPassTextcoord; 
@@ -42,7 +42,7 @@ void main()
 {
 
 	//3) sample texture using texture coordinate 
-	vec4 diffuseSample = texture(uText, vPassTextcoord); 
+	vec4 diffuseSample = texture(uTex_dm, vPassTextcoord); 
 
 	//4) assign sample to output color 
 	rtFragColor = diffuseSample;

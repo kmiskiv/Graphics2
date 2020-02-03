@@ -57,7 +57,7 @@ void main()
 	rtColor = diffuseSample; 
 
 	//5b) output texcoord 
-	rtTexture = vec4(vPassTextcoord, 1.0, 1.0); 
+	rtTexture = vec4(vPassTextcoord, 0.0, 1.0); 
 
 
 

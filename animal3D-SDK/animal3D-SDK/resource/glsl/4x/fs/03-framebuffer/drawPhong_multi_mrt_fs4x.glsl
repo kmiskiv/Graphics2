@@ -40,23 +40,22 @@ uniform sampler2D uTex_dm;
 uniform sampler2D uTex_sm; 
 
 //2) declare uniform variables for lights 
- uniform int uLightCt; 
- uniform float uLightSz[4]; 
- uniform float uLightSzInvSq[4]; 
- uniform vec4 uLightPos[4]; 
- uniform vec4 uLightCol[4];
+uniform int uLightCt; 
+uniform float uLightSz[4]; 
+uniform float uLightSzInvSq[4]; 
+uniform vec4 uLightPos[4]; 
+uniform vec4 uLightCol[4];
 
  //3) declare inbound varying data
- in vec4 viewPos; 
+in vec4 viewPos; 
 in vec4 vPassNormal; 
 in vec2 vPassTextcoord; 
  
  //5) set location of final color render target (location 0)
  layout (location = 0) out vec4 rtColor; 
 
-
  //6)declare render targets for each attribute and shading component 
- layout (location = 1) out vec4 rtViewPos; 
+layout (location = 1) out vec4 rtViewPos; 
 layout (location = 2) out vec4 rtViewNormal; 
 layout (location = 3) out vec4 rtAtlasTextcoord; 
 layout (location = 4) out vec4 rtDiffuseMap; 
@@ -71,12 +70,12 @@ out vec4 rtFragColor;
 void main()
 {
 	// DUMMY OUTPUT: all fragments are OPAQUE GREEN
-	rtFragColor = vec4(0.0, 1.0, 0.0, 1.0);
+	//rtFragColor = vec4(0.0, 1.0, 0.0, 1.0);
 
 	//4) implement Phong 
 	//grab sample from texture 
-	vec4 diffuseSample = texture(uTex_dm, vPassTexcoord); 
-	vec4 specularSample = texture(uTex_sm, vPassTexcoord);
+	vec4 diffuseSample = texture(uTex_dm, vPassTextcoord); 
+	vec4 specularSample = texture(uTex_sm, vPassTextcoord);
 	 
 	vec3 N = normalize(vPassNormal.xyz); 
 	 
@@ -101,7 +100,7 @@ void main()
 		 R = (diffuse + diffuse) * (N - L); 
 
 		//SPECULAR 
-		 V = normalize(vPassView); 
+		 V = normalize(viewPos.xyz); 
 		
 		float specular = dot (V, R); 
 
@@ -120,12 +119,12 @@ void main()
 	
 	rtColor = vec4(Phong, diffuseSample.a); 
 	rtViewPos = viewPos; 
-	rtViewNormal = L; 
-	rtAtlasTextcoord = diffuseSample; 
-	rtDiffuseMap = vec4(diffuse, diffuse, diffuse, 0.0);
-	rtSpecularMap = vec4(specular, specular, specular, 0.0); 
-	rtDiffuseTotal = vec4(Lambert, 1.0);
-	rtSpecularTotal = vec4(Phong, 1.0);
+	rtViewNormal = vec4(N, 1.0); 
+	rtAtlasTextcoord = vec4(vPassTextcoord, 0.0, 1.0); 
+	rtDiffuseMap = diffuseSample; 
+	rtSpecularMap = specularSample; 
+	rtDiffuseTotal = vec4(diffuseTotal, 1.0);
+	rtSpecularTotal = vec4(specularTotal, 1.0);
 
 
 

@@ -99,26 +99,17 @@ void main()
 		//output to render targets 
 		rtColor = vec4(Lambert, diffuseSample.a); 
 		rtViewPos = viewPos; 
-		rtViewNormal = L; 
-		rtAtlasTextcoord = diffuseSample;
-		rtDiffuseMap = vec4(diffuse, diffuse, diffuse, 0.0);
-		rtDiffuseTotal = vec4(Lambert, 1.0); 
+		rtViewNormal = vec4(N, 1.0); 
+		rtAtlasTextcoord = vec4(vPassTextcoord, 0.0, 1.0);
+		rtDiffuseMap = diffuseSample;
+		rtDiffuseTotal = vec4(diffuseTotal, 1.0); 
 
 
 		// DEBUGGING //
 
 	//rtFragColor = vec4(diffuse, diffuse, diffuse, 1.0); 
 
-	//takes range of -1 to 1 and converts it to range of 0 to 1
-	//takes the normal and converts it to color 
-	//this allows you to visualize data as color 
-	//rtFragColor = vec4(N.xyz * 0.5 + 0.5, 1.0); 
-
-	// can visualize light data as well
-	//rtFragColor = vec4(L.xyz * 0.5 + 0.5, 1.0); 
-
-
 
 	// DUMMY OUTPUT: all fragments are OPAQUE RED
-	rtFragColor = vec4(1.0, 0.0, 0.0, 1.0);
+	//rtFragColor = vec4(1.0, 0.0, 0.0, 1.0);
 }
