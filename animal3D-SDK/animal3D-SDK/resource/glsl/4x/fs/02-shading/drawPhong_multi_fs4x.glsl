@@ -94,7 +94,7 @@ void main()
 		specular = max(0.0, specular); 
 
 		specularTotal += specular * uLightCol[i].rgb; 
-
+	}
 
 	//put together in a similar fashion as you put together diffuse 
 	// 	PHONG

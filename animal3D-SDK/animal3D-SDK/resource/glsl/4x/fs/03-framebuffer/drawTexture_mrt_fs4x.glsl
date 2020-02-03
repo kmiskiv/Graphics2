@@ -37,13 +37,13 @@ out vec4 rtFragColor;
 uniform sampler2D uTex_dm; 
 
 //2) declare inbound varying for texture coordinate
-in vec2 vTexcoord; 
+in vec2 vPassTextcoord; 
 
 //output render target
-layout (location = 0) out vec4 vTarget; 
+layout (location = 0) out vec4 rtColor; 
 
 //5a) declare new render target (location = 3)
-layout (location = 3) in vec4 aTarget; 
+layout (location = 3) out vec4 rtTexture; 
 
 void main()
 {
@@ -51,12 +51,14 @@ void main()
 	//rtFragColor = vec4(1.0, 1.0, 1.0, 1.0);
 
 	//3) sample texture using texture coordinate 
-	vec4 diffuseSample = texture(uText, vPassTextcoord); 
+	vec4 diffuseSample = texture(uTex_dm, vPassTextcoord); 
 
 	//4) assign sample to output render target (location 0)
-	vTarget = diffuseSample; 
+	rtColor = diffuseSample; 
 
 	//5b) output texcoord 
-	aTarget = vec4(vPassTexcoord, 1.0, 1.0); 
+	rtTexture = vec4(vPassTextcoord, 1.0, 1.0); 
+
+
 
 }

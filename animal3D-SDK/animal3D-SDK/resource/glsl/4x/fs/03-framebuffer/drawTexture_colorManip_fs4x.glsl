@@ -33,6 +33,13 @@
 
 out vec4 rtFragColor;
 
+//1) declare uniform variable for texture
+uniform sampler2D uTex_dm; 
+
+//2) declare inbound varying for texture coordinate 
+
+
+
 void main()
 {
 	// DUMMY OUTPUT: all fragments are OPAQUE LIGHT GREY
