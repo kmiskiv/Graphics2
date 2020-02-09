@@ -32,10 +32,79 @@
 //	2) declare varying for shadow coordinate
 //	3) calculate and pass shadow coordinate
 
+//is a vec4 because it has a w value, which is 1
 layout (location = 0) in vec4 aPosition;
+
+// declare uniform variable for MV matrix
+uniform mat4 uMV; 
+
+// declare view position as outbound varying
+out vec4 viewPos;
+
+// declare uniform variable for P matrix
+uniform mat4 uP;
+
+// declare normal attribute 
+layout (location = 2) in vec4 aNormal; 
+
+// declare MV matrix for normals
+uniform mat4 uMV_nrm; 
+
+// declare outbound normal 
+out vec4 vPassNormal; 
+
+//declare Atlas transform
+uniform mat4 uAtlas; 
+
+//declare texture coordinate outbound varying
+out vec2 vPassTextcoord; 
+
+//declare texture coordinate attribute 
+layout (location = 8) in vec4 inTextCoord; 
+
+//declare uMVP matrix
+uniform mat4 uMVP; 
+
+//1) declare MVPB matrix for light
+uniform mat4 uMVPB; 
+
+//
+
+//2) declare varying for shadow coordinate
+out vec4 vShadowCoord; 
 
 void main()
 {
+	
+	//0 copy previous lighting data vertex shader
+
+	// correctly transform input position by MV matrix to get view position
+	viewPos = uMV * aPosition; 
+
+	// correctly transform view position by P matrix to get final position 
+		vec4 finalPos = uP * viewPos; 
+ 
+		gl_Position = finalPos; 
+
+	// correctly  transform input normal by MV normal matrix
+	vPassNormal = uMV_nrm * aNormal; 
+
+	// handle texture coordinate 
+
+		//correctly transform input texture coordinate by atlas matrix 
+		vPassTextcoord = (uAtlas * inTextCoord).xy;
+	
+
+	//3) calculate and pass shadow coordinate 
+	//shadowcoord = shadow_matrix * position; 
+	vShadowCoord = (uMVPB * finalPos); 
+
+	
+	/// DEBUGGING /// 
+
 	// DUMMY OUTPUT: directly assign input position to output position
-	gl_Position = aPosition;
+	//gl_Position = aPosition;
+
 }
+
+

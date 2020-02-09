@@ -49,5 +49,4 @@ void main()
 	gl_Position = uMVP * aPosition; 
 	vPassColor = aColor; 
 }
-}
 
