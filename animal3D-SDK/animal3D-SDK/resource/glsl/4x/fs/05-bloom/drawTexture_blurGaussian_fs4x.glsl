@@ -34,6 +34,27 @@ uniform sampler2D uImage00;
 
 layout (location = 0) out vec4 rtFragColor;
 
+//put the degree on the end 
+//this is the top of the triangle, so power of 0, so 1. 
+vec4 blurGaussian0(in sampler2D img, in vec2 center, in vec2 direction)
+{
+		return texture(img, center); 
+}
+
+//third row of pascal's triangle
+vec4 blurGaussian2(in sampler2D img, in vec2 center, in vec2 direction)
+{
+	vec4 total = vec4(0.0); 
+	total += texture(img, center) * 2.0; 
+	total += texture(img, center + direction); 
+	total += texture(img, center - direction); 
+	//return total divided by total weight, 2^2, so 4
+	//return (total / 4.0); 
+	//multiplication is faster
+	return (total *0.25);
+}
+
+
 void main()
 {
 	// DUMMY OUTPUT: all fragments are OPAQUE MAGENTA

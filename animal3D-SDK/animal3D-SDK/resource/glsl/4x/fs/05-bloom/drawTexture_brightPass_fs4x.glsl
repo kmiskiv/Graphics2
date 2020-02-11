@@ -32,9 +32,21 @@
 uniform sampler2D uImage00;
 
 layout (location = 0) out vec4 rtFragColor;
-
+	
+//1) implement brightness function 
+float relativeLuminance (vec3 color)
+{
+	    
+		return (0.2126 * color.r + 0.7152 * color.g +  0.0722 * color.b); 
+		//add a second render target for the luminance and output that. 
+}
 void main()
 {
 	// DUMMY OUTPUT: all fragments are OPAQUE CYAN
-	rtFragColor = vec4(0.0, 1.0, 1.0, 1.0);
+	//rtFragColor = vec4(0.0, 1.0, 1.0, 1.0);
+
+
+
+
 }
+	
