@@ -49,6 +49,8 @@ uniform vec4 uLightCol[4];
 in vec4 viewPos; 
 in vec4 vPassNormal; 
 in vec2 vPassTextcoord; 
+
+
 //1) recieve shadow coordinate 
 in vec4 vShadowCoord;  
  
@@ -134,10 +136,10 @@ void main()
 	//rtFragColor = textureProj(uTex_shadow, vShadowCoord) * vec4(1.0); 
 	
 
-	float shadowSample = texture2D(uTex_shadow, vShadowCoord);
+	//float shadowSample = texture2D(uTex_shadow, vShadowCoord);
 	
 	//2) perform perspective divide 
-	
+	vec4 perspectiveDivide = viewPos / viewPos.w; 
 
 	//4) perform shadow test 
 	//Perform the shadow test by comparing the coordinate depth against the shadow map sample.
