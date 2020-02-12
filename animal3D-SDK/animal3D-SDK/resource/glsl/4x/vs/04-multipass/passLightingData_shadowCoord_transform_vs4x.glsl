@@ -66,7 +66,7 @@ layout (location = 8) in vec4 inTextCoord;
 uniform mat4 uMVP; 
 
 //1) declare MVPB matrix for light
-uniform mat4 uMVPB; 
+uniform mat4 uMVPB_other; 
 
 //
 
@@ -97,7 +97,7 @@ void main()
 
 	//3) calculate and pass shadow coordinate 
 	//shadowcoord = shadow_matrix * position; 
-	vShadowCoord = (uMVPB * finalPos); 
+	vShadowCoord = (uMVPB_other * aPosition ); 
 
 	
 	/// DEBUGGING /// 

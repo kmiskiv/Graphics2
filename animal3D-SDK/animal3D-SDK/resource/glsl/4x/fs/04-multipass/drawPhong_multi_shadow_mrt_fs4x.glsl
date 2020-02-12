@@ -62,11 +62,11 @@ layout (location = 0) out vec4 rtColor;
 layout (location = 1) out vec4 rtViewPos; 
 layout (location = 2) out vec4 rtViewNormal; 
 layout (location = 3) out vec4 rtAtlasTextcoord; 
-layout (location = 4) out vec4 rtDiffuseMap; 
-layout (location = 5) out vec4 rtSpecularMap; 
+layout (location = 4) out vec4 rtShadowTest; 
+layout (location = 5) out vec4 rtShadowCoord; 
 layout (location = 6) out vec4 rtDiffuseTotal; 
 layout (location = 7) out vec4 rtSpecularTotal;
-layout (location = 8) out vec4 rtDepthBuffer;  
+//layout (location = 8) out vec4 rtDepthBuffer;  
 
 out vec4 rtFragColor;
 
@@ -80,12 +80,17 @@ float ShadowCalculation(vec4 fragPosLightSpace)
 
 	//2) perform perspective divide 
 	vec3 perspectiveDivide = fragPosLightSpace.xyz / fragPosLightSpace.w;
-	 
+	 rtShadowCoord = vec4(perspectiveDivide.rgb, 1.0); 
+
+
+
 	 //transform to [0,1] range
-	 perspectiveDivide = perspectiveDivide * 0.5 + 0.5; 
+	 //perspectiveDivide = perspectiveDivide * 0.5 + 0.5; 
 
 	 //get the closest depth value from the light's perspective
 	 float closestDepth = texture2D(uTex_shadow, perspectiveDivide.xy).r; 
+
+
 
 	 //get the depth of the current fragment from light's perspective; 
 	 float currentDepth = perspectiveDivide.z; 
@@ -93,7 +98,10 @@ float ShadowCalculation(vec4 fragPosLightSpace)
 	 //check whether current frag position is in shadow 
 	 float shadow = currentDepth > closestDepth ? 1.0 : 0.0; 
 
-	 return shadow; 
+	 rtShadowTest = vec4(shadow, shadow, shadow, 1.0);
+
+	 return shadow;
+	  
 
 }
 
@@ -156,17 +164,19 @@ void main()
 	rtViewPos = viewPos; 
 	rtViewNormal = vec4(N, 1.0); 
 	rtAtlasTextcoord = vec4(vPassTextcoord, 0.0, 1.0); 
-	rtDiffuseMap = diffuseSample; 
-	rtSpecularMap = specularSample; 
+	//rtDiffuseMap = diffuseSample; 
+	//rtSpecularMap = specularSample; 
 	rtDiffuseTotal = vec4(diffuseTotal, 1.0);
 	rtSpecularTotal = vec4(specularTotal, 1.0);
 
 	//calculate shadow
-
 	float shadow = ShadowCalculation(vShadowCoord); 
-	vec3 lighting = (ambient + (1.0 - shadow) * (diffuse + specular))* Phong;  
+	vec3 lighting = (ambient + (1.0 - shadow) * (diffuse + specular));//* Phong;  
 
 	rtColor = vec4(lighting, 1.0);
+
+
+
 
 }
 
