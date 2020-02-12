@@ -73,6 +73,31 @@ out vec4 rtFragColor;
 //3) declare shadow map texture 
 uniform sampler2D uTex_shadow;  
 
+
+// referenced: https://learnopengl.com/Advanced-Lighting/Shadows/Shadow-Mapping
+float ShadowCalculation(vec4 fragPosLightSpace)
+{
+
+	//2) perform perspective divide 
+	vec3 perspectiveDivide = fragPosLightSpace.xyz / fragPosLightSpace.w;
+	 
+	 //transform to [0,1] range
+	 perspectiveDivide = perspectiveDivide * 0.5 + 0.5; 
+
+	 //get the closest depth value from the light's perspective
+	 float closestDepth = texture2D(uTex_shadow, perspectiveDivide.xy).r; 
+
+	 //get the depth of the current fragment from light's perspective; 
+	 float currentDepth = perspectiveDivide.z; 
+
+	 //check whether current frag position is in shadow 
+	 float shadow = currentDepth > closestDepth ? 1.0 : 0.0; 
+
+	 return shadow; 
+
+}
+
+
 void main()
 {
 	// DUMMY OUTPUT: all fragments are OPAQUE GREEN
@@ -123,6 +148,10 @@ void main()
 				+ (specularTotal * specularSample.rgb)
 				+  vec3(0.01, 0.0, 0.02); 
 	
+	vec3 diffuse = diffuseTotal * diffuseSample.rgb; 
+	vec3 specular = specularTotal * specularSample.rgb; 
+	vec3 ambient = vec3(0.01, 0.0, 0.02);
+
 	rtColor = vec4(Phong, diffuseSample.a); 
 	rtViewPos = viewPos; 
 	rtViewNormal = vec4(N, 1.0); 
@@ -132,17 +161,14 @@ void main()
 	rtDiffuseTotal = vec4(diffuseTotal, 1.0);
 	rtSpecularTotal = vec4(specularTotal, 1.0);
 
-	//test 
-	//rtFragColor = textureProj(uTex_shadow, vShadowCoord) * vec4(1.0); 
-	
+	//calculate shadow
 
-	//float shadowSample = texture2D(uTex_shadow, vShadowCoord);
-	
-	//2) perform perspective divide 
-	vec4 perspectiveDivide = viewPos / viewPos.w; 
+	float shadow = ShadowCalculation(vShadowCoord); 
+	vec3 lighting = (ambient + (1.0 - shadow) * (diffuse + specular))* Phong;  
 
-	//4) perform shadow test 
-	//Perform the shadow test by comparing the coordinate depth against the shadow map sample.
-
+	rtColor = vec4(lighting, 1.0);
 
 }
+
+
+
