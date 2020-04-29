@@ -24,19 +24,99 @@
 
 #version 410
 
-// ****TO-DO: 
-//	1) declare uniform variables for textures; see demo code for hints
-//	2) declare uniform variables for lights; see demo code for hints
-//	3) declare inbound varying data
-//	4) implement Phong shading model
-//	Note: test all data and inbound values before using them!
-//	5) set location of final color render target (location 0)
-//	6) declare render targets for each attribute and shading component
+//1) declare uniform variables for textures
+//dm for diffuse ma 
+uniform sampler2D uTex_dm; 
+//sm for specular map 
+uniform sampler2D uTex_sm; 
+
+//2) declare uniform variables for lights 
+uniform int uLightCt; 
+uniform float uLightSz[4]; 
+uniform float uLightSzInvSq[4]; 
+uniform vec4 uLightPos[4]; 
+uniform vec4 uLightCol[4];
+
+ //3) declare inbound varying data
+in vec4 viewPos; 
+in vec4 vPassNormal; 
+in vec2 vPassTextcoord; 
+ 
+ //5) set location of final color render target (location 0)
+ layout (location = 0) out vec4 rtColor; 
+
+ //6)declare render targets for each attribute and shading component 
+layout (location = 1) out vec4 rtViewPos; 
+layout (location = 2) out vec4 rtViewNormal; 
+layout (location = 3) out vec4 rtAtlasTextcoord; 
+layout (location = 4) out vec4 rtDiffuseMap; 
+layout (location = 5) out vec4 rtSpecularMap; 
+layout (location = 6) out vec4 rtDiffuseTotal; 
+layout (location = 7) out vec4 rtSpecularTotal;
+layout (location = 8) out vec4 rtDepthBuffer;  
+
 
 out vec4 rtFragColor;
 
 void main()
 {
 	// DUMMY OUTPUT: all fragments are OPAQUE GREEN
-	rtFragColor = vec4(0.0, 1.0, 0.0, 1.0);
+	//rtFragColor = vec4(0.0, 1.0, 0.0, 1.0);
+
+	//4) implement Phong 
+	//grab sample from texture 
+	vec4 diffuseSample = texture(uTex_dm, vPassTextcoord); 
+	vec4 specularSample = texture(uTex_sm, vPassTextcoord);
+	 
+	vec3 N = normalize(vPassNormal.xyz); 
+	 
+	vec3 diffuseTotal = vec3(0.0); 
+	vec3 specularTotal = vec3(0.0); 
+	vec3 L = vec3(0.0); 
+	vec3 V = vec3(0.0);
+	vec3 R = vec3(0.0); 
+
+	//the light loop
+	for (int i = 0; i < uLightCt; i++)
+	{
+		 L = normalize(uLightPos[i].xyz - viewPos.xyz);
+		float diffuse = dot (N, L);	
+		diffuse = max(diffuse, 0.0);
+		diffuseTotal += diffuse * uLightCol[i].rgb;
+
+		//calculate the reflection vector, diffuse constant, specular constant 
+
+		//reflection vector
+		//formula = 2( N dot L) N - L
+		 R = (diffuse + diffuse) * (N - L); 
+
+		//SPECULAR 
+		 V = normalize(viewPos.xyz); 
+		
+		float specular = dot (V, R); 
+
+		//clamp specular to get rid of negative numbers 
+		specular = max(0.0, specular); 
+
+		specularTotal += specular * uLightCol[i].rgb; 
+	}
+
+	//put together in a similar fashion as you put together diffuse 
+	// 	PHONG
+	//phong is the sum of diffuse, specular and ambient components. 
+	vec3 Phong = (diffuseTotal * diffuseSample.rgb) 
+				+ (specularTotal * specularSample.rgb)
+				+  vec3(0.01, 0.0, 0.02); 
+	
+	rtColor = vec4(Phong, diffuseSample.a); 
+	rtViewPos = viewPos; 
+	rtViewNormal = vec4(N, 1.0); 
+	rtAtlasTextcoord = vec4(vPassTextcoord, 0.0, 1.0); 
+	rtDiffuseMap = diffuseSample; 
+	rtSpecularMap = specularSample; 
+	rtDiffuseTotal = vec4(diffuseTotal, 1.0);
+	rtSpecularTotal = vec4(specularTotal, 1.0);
+
+
+
 }

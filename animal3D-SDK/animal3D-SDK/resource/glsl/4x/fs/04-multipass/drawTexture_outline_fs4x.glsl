@@ -24,14 +24,42 @@
 
 #version 410
 
-// ****TO-DO: 
-//	0) copy existing texturing shader
-//	1) implement outline algorithm - see render code for uniform hints
+ut vec4 rtFragColor;
 
-out vec4 rtFragColor;
+
+//0 copy existing texturing shader
+// declare uniform variable for texture
+uniform sampler2D uTex_dm; 
+
+// declare inbound varying for texture coordinate
+in vec2 vPassTextcoord; 
+
+//output render target
+layout (location = 0) out vec4 rtColor; 
+
+// declare new render target (location = 3)
+layout (location = 3) out vec4 rtTexture; 
 
 void main()
 {
-	// DUMMY OUTPUT: all fragments are OPAQUE DARK GREY
-	rtFragColor = vec4(0.2, 0.2, 0.2, 1.0);
+	// DUMMY OUTPUT: all fragments are OPAQUE WHITE
+	//rtFragColor = vec4(1.0, 1.0, 1.0, 1.0);
+
+	//3) sample texture using texture coordinate 
+	vec4 diffuseSample = texture(uTex_dm, vPassTextcoord); 
+
+	//4) assign sample to output render target (location 0)
+	rtColor = diffuseSample; 
+
+	//5b) output texcoord 
+	rtTexture = vec4(vPassTextcoord, 0.0, 1.0); 
+
+
+	//implement outline algorithm
+
+
+
+
+
+
 }

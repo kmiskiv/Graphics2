@@ -24,17 +24,15 @@
 
 #version 410
 
-// ****TO-DO: 
-//	1) declare varying to receive input vertex color from vertex shader
-//	2) assign vertex color to output color
+out vec4 rtFragColor;
 
-in vec4 vColor;	// (1)
-
-layout (location = 0) out vec4 rtFragColor;
+//the trick to varying -- make sure they have the same name as the output in the previous stage
+in vec4 vColor; 
 
 void main()
 {
 	// DUMMY OUTPUT: all fragments are OPAQUE RED
-//	rtFragColor = vec4(1.0, 0.0, 0.0, 1.0);
-	rtFragColor = vColor;
+	//rtFragColor = vec4(1.0, 0.0, 0.0, 1.0);
+	rtFragColor = vColor; 
 }
+
