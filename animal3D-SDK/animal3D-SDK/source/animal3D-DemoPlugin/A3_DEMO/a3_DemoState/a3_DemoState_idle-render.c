@@ -65,6 +65,7 @@ void a3demo_render_controls(a3_DemoState const* demoState,
 		"LIGHTING & SHADING",
 		"LIGHTING PIPELINES",
 		"CURVES & INTERPOLATION",
+		"FINAL",
 	};
 
 	// text color
@@ -88,6 +89,9 @@ void a3demo_render_controls(a3_DemoState const* demoState,
 		break;
 	case demoState_keyframes:
 		a3keyframes_render_controls(demoState, demoState->demoMode_keyframes, textAlign, textDepth, textOffsetDelta, textOffset);
+		break;
+	case demoState_triangle:
+		a3triangle_render_controls(demoState, demoState->demoMode_triangle, textAlign, textDepth, textOffsetDelta, textOffset);
 		break;
 	}
 

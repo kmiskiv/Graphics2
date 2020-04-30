@@ -47,6 +47,7 @@
 #include "a3_Demo_Shading.h"
 #include "a3_Demo_Pipelines.h"
 #include "a3_Demo_Keyframes.h"
+#include "A3_DEMO/a3_Demo_Triangle.h"
 
 
 //-----------------------------------------------------------------------------
@@ -69,6 +70,7 @@ extern "C"
 		demoState_shading,				// basic shading mode
 		demoState_pipelines,			// different pipelines for exploration
 		demoState_keyframes,			// keyframe animation, interpolation and curve drawing
+		demoState_triangle,				//mode for the Sierpinki's Triangle
 
 		demoState_mode_max
 	};
@@ -170,6 +172,7 @@ extern "C"
 		a3_Demo_Shading demoMode_shading[1];
 		a3_Demo_Pipelines demoMode_pipelines[1];
 		a3_Demo_Keyframes demoMode_keyframes[1];
+		a3_Demo_Triangle demoMode_triangle[1];
 		a3_DemoState_ModeName demoMode;
 
 		// cameras
@@ -235,7 +238,7 @@ extern "C"
 				a3_DemoSceneObject
 					skyboxObject[1];
 
-				// interactive scene objects
+				 //interactive scene objects
 				a3_DemoSceneObject
 					planeObject[1],
 					sphereObject[1],
@@ -243,10 +246,14 @@ extern "C"
 					torusObject[1],
 					teapotObject[1];
 
-				// animating scene objects
+				 //animating scene objects
 				a3_DemoSceneObject
 					morphObject[1],
-					skeletonObject[1];
+					 skeletonObject[1];
+
+				a3_DemoSceneObject
+					triangleObject[1];
+
 			};
 		};
 		union {
@@ -332,6 +339,8 @@ extern "C"
 					draw_teapot[1];								// can't not have a Utah teapot
 				a3_VertexDrawable
 					draw_teapot_morph[1];						// a MORPHING UTAH TEAPOT whaaaaaat???
+				a3_VertexDrawable
+					draw_triangle[1];
 			};
 		};
 

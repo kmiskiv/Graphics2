@@ -115,6 +115,9 @@
     <Filter Include="Resource Files\A3_DEMO\glsl\4x\vs\07-keyframes">
       <UniqueIdentifier>{b74bbca8-c4f3-4b5d-b29b-8ebc21cda84d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\common\A3_DEMO\a3_Demo_Triangle">
+      <UniqueIdentifier>{18f0e697-2a78-4eac-830b-6ef36c623341}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="_src_win\main_dll.c">
@@ -189,6 +192,12 @@
     <ClCompile Include="..\..\..\source\animal3D-DemoPlugin\A3_DEMO\_a3_demo_utilities\_src\animation\a3_Kinematics.c">
       <Filter>Source Files\common\A3_DEMO\_a3_demo_utilities\_src\animation</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\source\animal3D-DemoPlugin\A3_DEMO\a3_Demo_Triangle\a3_Demo_Triangle_idle-input.c">
+      <Filter>Source Files\common\A3_DEMO\a3_Demo_Triangle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\animal3D-DemoPlugin\A3_DEMO\a3_Demo_Triangle\a3_Demo_Triangle_idle-render.c">
+      <Filter>Source Files\common\A3_DEMO\a3_Demo_Triangle</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\source\animal3D-DemoPlugin\A3_DEMO\a3_DemoState.h">
@@ -226,6 +235,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\source\animal3D-DemoPlugin\A3_DEMO\_a3_demo_utilities\animation\a3_Kinematics.h">
       <Filter>Header Files\A3_DEMO\_a3_demo_utilities\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="a3_Demo_Triangle.h">
+      <Filter>Header Files\A3_DEMO</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

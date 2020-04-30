@@ -129,6 +129,9 @@ void a3demo_input(a3_DemoState *demoState, a3f64 dt)
 		break;
 	case demoState_keyframes:
 		demoState->activeCamera = demoState->demoMode_keyframes->activeCamera;
+	case demoState_triangle:
+		demoState->activeCamera = demoState->demoMode_triangle->activeCamera; 
+
 		break;
 	}
 }
