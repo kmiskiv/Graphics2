@@ -54,6 +54,8 @@ void a3pipelines_render_controls(a3_DemoState const* demoState, a3_Demo_Pipeline
 	a3f32 const textAlign, a3f32 const textDepth, a3f32 const textOffsetDelta, a3f32 textOffset);
 void a3keyframes_render_controls(a3_DemoState const* demoState, a3_Demo_Keyframes const* demoMode,
 	a3f32 const textAlign, a3f32 const textDepth, a3f32 const textOffsetDelta, a3f32 textOffset);
+void a3triangle_render_controls(a3_DemoState const* demoState, a3_Demo_Triangle const* demoMode,
+	a3f32 const textAlign, a3f32 const textDepth, a3f32 const textOffsetDelta, a3f32 textOffset);
 
 
 // display current mode controls
@@ -193,6 +195,7 @@ void a3demo_render_data(const a3_DemoState* demoState,
 void a3shading_render(a3_DemoState const* demoState, a3_Demo_Shading const* demoMode);
 void a3pipelines_render(a3_DemoState const* demoState, a3_Demo_Pipelines const* demoMode);
 void a3keyframes_render(a3_DemoState const* demoState, a3_Demo_Keyframes const* demoMode);
+void a3triangle_render(a3_DemoState const* demoState, a3_Demo_Triangle const* demoMode);
 
 void a3demo_render(a3_DemoState const* demoState)
 {
@@ -220,6 +223,9 @@ void a3demo_render(a3_DemoState const* demoState)
 	case demoState_keyframes:
 		a3keyframes_render(demoState, demoState->demoMode_keyframes);
 		break;
+	case demoState_triangle:
+		a3triangle_render(demoState, demoState->demoMode_triangle);
+		break; 
 	}
 
 
