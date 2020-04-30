@@ -24,7 +24,7 @@
 
 #version 410
 
-ut vec4 rtFragColor;
+out vec4 rtFragColor;
 
 
 //0 copy existing texturing shader

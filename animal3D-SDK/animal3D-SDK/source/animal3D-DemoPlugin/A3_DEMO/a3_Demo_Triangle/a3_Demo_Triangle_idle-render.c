@@ -89,14 +89,14 @@ void a3triangle_render_controls(a3_DemoState const* demoState, a3_Demo_Triangle 
 	a3textDraw(demoState->text, textAlign, textOffset += textOffsetDelta, textDepth, col.r, col.g, col.b, col.a,
 		"    Pipeline (%u / %u) ('k' | 'l'): %s", pipeline + 1, shading_pipeline_max, pipelineText[pipeline]);
 	a3textDraw(demoState->text, textAlign, textOffset += textOffsetDelta, textDepth, col.r, col.g, col.b, col.a,
-		"        Target (%u / %u) ('t' | 'y'): %s", targetIndex + 1, targetCount, targetText[pipeline][targetIndex]);
+		"        Target (%u / %u) ('z' | 'x'): %s", targetIndex + 1, targetCount, targetText[pipeline][targetIndex]);
 
 	// lighting modes
 	a3textDraw(demoState->text, textAlign, textOffset += textOffsetDelta, textDepth, col.r, col.g, col.b, col.a,
 		"    Rendering mode (%u / %u) ('g' | 'h'): %s", render + 1, shading_render_max, renderProgramName[render]);
 
 	// specific modes
-	if (pipeline == shading_fbo)
+	if (pipeline == triangle_fbo)
 		a3textDraw(demoState->text, textAlign, textOffset += textOffsetDelta, textDepth, col.r, col.g, col.b, col.a,
 			"    Display mode (%u / %u) ('v' | 'b'): %s", display + 1, shading_display_max, displayProgramName[display]);
 
@@ -116,7 +116,7 @@ void a3triangle_render(a3_DemoState const* demoState, a3_Demo_Triangle const* de
 	const a3_Framebuffer* currentWriteFBO, * currentDisplayFBO;
 
 	// indices
-	a3ui32 i, j, k;
+	a3ui32 i, j, k, l;
 
 	// RGB
 	const a3vec4 rgba4[] = {
@@ -153,12 +153,20 @@ void a3triangle_render(a3_DemoState const* demoState, a3_Demo_Triangle const* de
 
 	// temp texture pointers
 	const a3_Texture* texture_dm[] = {
+		demoState->tex_stone_dm,
+		demoState->tex_earth_dm,
+		demoState->tex_stone_dm,
+		demoState->tex_mars_dm,
 		demoState->tex_checker,
 	};
 
 
 	const a3_Texture* texture_sm[] =
 	{
+		demoState->tex_stone_dm,
+		demoState->tex_earth_sm,
+		demoState->tex_stone_dm,
+		demoState->tex_mars_sm,
 		demoState->tex_checker,
 
 	};
@@ -175,6 +183,7 @@ void a3triangle_render(a3_DemoState const* demoState, a3_Demo_Triangle const* de
 			demoState->prog_drawTexture_mrt,
 			demoState->prog_drawLambert_multi_mrt,
 			demoState->prog_drawPhong_multi_mrt,
+			demoState->prog_drawFinal,
 		},
 	};
 
@@ -226,8 +235,8 @@ void a3triangle_render(a3_DemoState const* demoState, a3_Demo_Triangle const* de
 	// select target framebuffer
 	switch (pipeline)
 	{
-		// shading
-	case shading_back:
+		// triangle shading
+	case triangle_back:
 		// target back buffer (default)
 		a3framebufferDeactivateSetViewport(a3fbo_depth24_stencil8,
 			-demoState->frameBorder, -demoState->frameBorder, demoState->frameWidth, demoState->frameHeight);
@@ -247,7 +256,7 @@ void a3triangle_render(a3_DemoState const* demoState, a3_Demo_Triangle const* de
 		break;
 
 		// shading with MRT FBO
-	case shading_fbo:
+	case triangle_fbo:
 		// target scene framebuffer
 		currentWriteFBO = writeFBO[pipeline];
 		a3demo_setSceneState(currentWriteFBO, demoState->displaySkybox);
@@ -305,14 +314,30 @@ void a3triangle_render(a3_DemoState const* demoState, a3_Demo_Triangle const* de
 			//	- modelview
 			//	- modelview for normals
 			//	- per-object animation data
-			for (k = 0,
-				currentSceneObject = demoState->planeObject, endSceneObject = demoState->teapotObject;
-				currentSceneObject <= endSceneObject;
-				++k, ++currentSceneObject)
+			
+			
+			
+			for (l = 0; l < 2; l++)
 			{
-				a3textureActivate(texture_dm[k], a3tex_unit00);
-				a3textureActivate(texture_sm[k], a3tex_unit01);
-				a3demo_drawModelLighting(modelViewProjectionMat.m, modelViewMat.m, viewProjectionMat.m, viewMat.m, currentSceneObject->modelMat.m, currentDemoProgram, drawable[k], rgba4[k + 3].v);
+				if (l == 0)
+				{
+					currentSceneObject = demoState->planeObject;
+					a3textureActivate(texture_dm[k], a3tex_unit00);
+					a3textureActivate(texture_sm[k], a3tex_unit01);
+					a3demo_drawModelLighting(modelViewProjectionMat.m, modelViewMat.m, viewProjectionMat.m, viewMat.m, currentSceneObject->modelMat.m, currentDemoProgram, drawable[0], rgba4[0 + 3].v);
+				}
+				else if (l == 1)
+				{
+					currentSceneObject = demoState->triangleObject;
+
+					//a3textureActivate(texture_dm[k], a3tex_unit00);
+					//a3textureActivate(texture_sm[k], a3tex_unit01);
+					a3demo_drawModelLighting(modelViewProjectionMat.m, modelViewMat.m, viewProjectionMat.m, viewMat.m, currentSceneObject->modelMat.m, currentDemoProgram, drawable[1], rgba4[1 + 3].v);
+
+				}
+
+
+				
 			}
 		}	break;
 			// end geometry pass
