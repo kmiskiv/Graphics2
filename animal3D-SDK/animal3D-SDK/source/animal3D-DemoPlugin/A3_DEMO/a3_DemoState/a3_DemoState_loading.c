@@ -275,7 +275,7 @@ void a3demo_loadGeometry(a3_DemoState *demoState)
 		a3proceduralCreateDescriptorSphere(proceduralShapes + 1, a3geomFlag_tangents, a3geomAxis_default, 1.0f, 32, 24);
 		a3proceduralCreateDescriptorCylinder(proceduralShapes + 2, a3geomFlag_tangents, a3geomAxis_x, 1.0f, 2.0f, 32, 1, 1);
 		a3proceduralCreateDescriptorTorus(proceduralShapes + 3, a3geomFlag_tangents, a3geomAxis_x, 1.0f, 0.25f, 32, 24);
-		//a3proceduralCreateDescriptorTriangle(proceduralShapes + 4, a3geomFlag_tangents, a3geomAxis_x, 5.0f, 2.5f);
+		a3proceduralCreateDescriptorTriangle(proceduralShapes + 4, a3geomFlag_tangents, a3geomAxis_x, 5.0f, 2.5f);
 		for (i = 0; i < proceduralShapesCount; ++i)
 		{
 			a3proceduralGenerateGeometryData(proceduralShapesData + i, proceduralShapes + i, 0);
@@ -375,6 +375,11 @@ void a3demo_loadGeometry(a3_DemoState *demoState)
 	sharedVertexStorage += a3geometryGenerateDrawable(currentDrawable, displayShapesData + 2, vao, vbo_ibo, sceneCommonIndexFormat, 0, 0);
 	currentDrawable = demoState->draw_unitquad;
 	sharedVertexStorage += a3geometryGenerateDrawable(currentDrawable, displayShapesData + 3, vao, vbo_ibo, sceneCommonIndexFormat, 0, 0);
+	currentDrawable = demoState->draw_triangle;
+	sharedVertexStorage += a3geometryGenerateDrawable(currentDrawable, displayShapesData + 4, vao, vbo_ibo, sceneCommonIndexFormat, 0, 0);
+
+
+
 
 	// models: position, texture coordinates and normals
 //	vao = demoState->vao_position_texcoord_normal;
@@ -391,9 +396,7 @@ void a3demo_loadGeometry(a3_DemoState *demoState)
 	sharedVertexStorage += a3geometryGenerateDrawable(currentDrawable, proceduralShapesData + 3, vao, vbo_ibo, sceneCommonIndexFormat, 0, 0);
 	currentDrawable = demoState->draw_teapot;
 	sharedVertexStorage += a3geometryGenerateDrawable(currentDrawable, loadedModelsData + 0, vao, vbo_ibo, sceneCommonIndexFormat, 0, 0);
-	currentDrawable = demoState->draw_triangle; 
-	sharedVertexStorage += a3geometryGenerateDrawable(currentDrawable, proceduralShapesData + 4, vao, vbo_ibo, sceneCommonIndexFormat, 0, 0);
-
+	
 
 	// release data when done
 	for (i = 0; i < displayShapesCount; ++i)
@@ -794,8 +797,9 @@ void a3demo_loadShaders(a3_DemoState *demoState)
 	//final triangle program
 	currentDemoProg = demoState->prog_drawFinal; 
 	a3shaderProgramCreate(currentDemoProg->program, "prog:drawFinal");
-	a3shaderProgramAttachShader(currentDemoProg->program, shaderList.passColor_transform_vs->shader);
-	a3shaderProgramAttachShader(currentDemoProg->program, shaderList.drawColorAttrib_fs->shader);
+	a3shaderProgramAttachShader(currentDemoProg->program, shaderList.finalvertexshader_vs->shader);
+	a3shaderProgramAttachShader(currentDemoProg->program, shaderList.finalfragshader_fs->shader);
+	a3shaderProgramAttachShader(currentDemoProg->program, shaderList.drawPhong_multi_shadow_mrt_fs->shader);
 
 
 

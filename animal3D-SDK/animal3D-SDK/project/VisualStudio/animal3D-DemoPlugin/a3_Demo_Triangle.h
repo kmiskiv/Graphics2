@@ -8,21 +8,20 @@ Kayla Miskiv, Spring 2020 */
 #ifndef __ANIMAL3D_DEMO_TRIANGLE_H
 #define __ANIMAL3D_DEMO_TRIANGLE_H
 
-
+#include "animal3D/animal3D.h"
 
 
 #ifdef __cplusplus
 extern "C"
 {
 #else	// !__cplusplus
-typedef struct a3_Demo_Triangle						a3_Demo_Triangle;
-typedef enum a3_Demo_Triangle_RenderProgramName		a3_Demo_Triangle_RenderProgramName;
+typedef struct a3_Demo_Triangle							a3_Demo_Triangle;
+typedef enum a3_Demo_Triangle_RenderProgramName			a3_Demo_Triangle_RenderProgramName;
 typedef enum a3_Demo_Triangle_DisplayProgramName		a3_Demo_Triangle_DisplayProgramName;
 typedef enum a3_Demo_Triangle_ActiveCameraName			a3_Demo_Triangle_ActiveCameraName;
 typedef enum a3_Demo_Triangle_PipelineName				a3_Demo_Triangle_PipelineName;
 typedef enum a3_Demo_Triangle_PassName					a3_Demo_Triangle_PassName;
 typedef enum a3_Demo_Triangle_TargetName				a3_Demo_Triangle_TargetName;
-typedef enum a3_Demo_Triangle_InterpolationModeName	a3_Demo_Triangle_InterpolationModeName;
 #endif	// __cplusplus
 
 //-----------------------------------------------------------------------------
@@ -63,7 +62,7 @@ enum a3_Demo_Triangle_ActiveCameraName
 enum a3_Demo_Triangle_PipelineName
 {
 	triangle_back,				// on-screen rendering with back buffer
-	triangle_fbo,				// off-screen rendering with MRT FBO
+	//triangle_fbo,				// off-screen rendering with MRT FBO
 
 	triangle_pipeline_max
 };
@@ -93,6 +92,7 @@ struct a3_Demo_Triangle
 	a3_Demo_Triangle_RenderProgramName render;
 	a3_Demo_Triangle_DisplayProgramName display;
 	a3_Demo_Triangle_ActiveCameraName activeCamera;
+	a3_Demo_Triangle_PassName pass; 
 
 	a3_Demo_Triangle_PipelineName pipeline;
 	a3_Demo_Triangle_TargetName targetIndex[triangle_pipeline_max], targetCount[triangle_pipeline_max];

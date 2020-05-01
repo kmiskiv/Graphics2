@@ -37,40 +37,26 @@ void a3triangle_render_controls(a3_DemoState const* demoState, a3_Demo_Triangle 
 
 	};
 
-	a3byte const* targetText_fbo[triangle_target_fbo_max] =
+	/*a3byte const* targetText_fbo[triangle_target_fbo_max] =
 	{
-		"Color target 0: FINAL SCENE COLOR",
-		"Color target 1: Attrib data: view position",
-		"Color target 2: Attrib data: view normal",
-		"Color target 3: Attrib data: atlas texcoord",
-		"Color target 4: Texture: diffuse map",
-		"Color target 5: Texture: specular map",
-		"Color target 6: Lighting: diffuse total",
-		"Color target 7: Lighting: specular total",
-		"Depth buffer",
-	};
+
+	}*/
 
 	a3byte const* const* targetText[triangle_pipeline_max] =
 	{
 		targetText_back,
-		targetText_fbo,
 	};
 
 	//forward pipeline names
 	a3byte const* renderProgramName[triangle_render_max] =
 	{
-		"Solid color",
-		"Texturing",
-		"Lambert shading",
-		"Phong shading",
+		"Phong Shading",
 	};
 
 
 	a3byte const* displayProgramName[triangle_display_max] =
 	{
-			"Texture",
-		"Color manipulation",
-		"Texcoord manipulation",
+		"Texture",
 
 	};
 
@@ -84,21 +70,23 @@ void a3triangle_render_controls(a3_DemoState const* demoState, a3_Demo_Triangle 
 	a3_Demo_Triangle_PipelineName const pipeline = demoMode->pipeline;
 	a3_Demo_Triangle_TargetName const targetIndex = demoMode->targetIndex[pipeline];
 	a3_Demo_Triangle_TargetName const targetCount = demoMode->targetCount[pipeline];
-
+	a3_Demo_Triangle_ActiveCameraName const activeCamera = demoMode->activeCamera;
+	a3_Demo_Triangle_PassName const pass = demoMode->pass; 
+	
 	//demoModes
 	a3textDraw(demoState->text, textAlign, textOffset += textOffsetDelta, textDepth, col.r, col.g, col.b, col.a,
-		"    Pipeline (%u / %u) ('k' | 'l'): %s", pipeline + 1, shading_pipeline_max, pipelineText[pipeline]);
+		"    Pipeline (%u / %u) ('[' | ']'): %s", pipeline + 1, triangle_pipeline_max, pipelineText[pipeline]);
 	a3textDraw(demoState->text, textAlign, textOffset += textOffsetDelta, textDepth, col.r, col.g, col.b, col.a,
-		"        Target (%u / %u) ('z' | 'x'): %s", targetIndex + 1, targetCount, targetText[pipeline][targetIndex]);
+		"        Target (%u / %u) ('{' | '}'): %s", targetIndex + 1, targetCount, targetText[pipeline][targetIndex]);
 
 	// lighting modes
-	a3textDraw(demoState->text, textAlign, textOffset += textOffsetDelta, textDepth, col.r, col.g, col.b, col.a,
-		"    Rendering mode (%u / %u) ('g' | 'h'): %s", render + 1, shading_render_max, renderProgramName[render]);
+	//a3textDraw(demoState->text, textAlign, textOffset += textOffsetDelta, textDepth, col.r, col.g, col.b, col.a,
+		//"    Rendering mode (%u / %u) ('g' | 'h'): %s", render + 1, triangle_render_max, renderProgramName[render]);
 
 	// specific modes
 	if (pipeline == triangle_fbo)
 		a3textDraw(demoState->text, textAlign, textOffset += textOffsetDelta, textDepth, col.r, col.g, col.b, col.a,
-			"    Display mode (%u / %u) ('v' | 'b'): %s", display + 1, shading_display_max, displayProgramName[display]);
+			"    Display mode (%u / %u) ('v' | 'b'): %s", display + 1, triangle_display_max, displayProgramName[display]);
 
 }
 	//-----------------------------------------------------------------------------
@@ -172,19 +160,12 @@ void a3triangle_render(a3_DemoState const* demoState, a3_Demo_Triangle const* de
 	};
 
 	// forward pipeline shader programs
-	const a3_DemoStateShaderProgram* renderProgram[shading_pipeline_max][shading_render_max] = {
+	const a3_DemoStateShaderProgram* renderProgram[triangle_pipeline_max][triangle_render_max] = {
 		{
-			demoState->prog_drawColorUnif,
-			demoState->prog_drawTexture,
-			demoState->prog_drawLambert_multi,
-			demoState->prog_drawPhong_multi,
-		}, {
-			demoState->prog_drawColorUnif,
-			demoState->prog_drawTexture_mrt,
-			demoState->prog_drawLambert_multi_mrt,
-			demoState->prog_drawPhong_multi_mrt,
 			demoState->prog_drawFinal,
-		},
+
+		}
+
 	};
 
 	//display shader programs
@@ -287,8 +268,8 @@ void a3triangle_render(a3_DemoState const* demoState, a3_Demo_Triangle const* de
 		{
 			// forward pass
 		case 0: {
-			// select program based on settings
-			currentDemoProgram = renderProgram[pipeline][render];
+			
+			currentDemoProgram = demoState->prog_drawFinal;
 			a3shaderProgramActivate(currentDemoProgram->program);
 
 			// send shared data: 
@@ -322,8 +303,8 @@ void a3triangle_render(a3_DemoState const* demoState, a3_Demo_Triangle const* de
 				if (l == 0)
 				{
 					currentSceneObject = demoState->planeObject;
-					a3textureActivate(texture_dm[k], a3tex_unit00);
-					a3textureActivate(texture_sm[k], a3tex_unit01);
+					a3textureActivate(texture_dm[l], a3tex_unit00);
+					a3textureActivate(texture_sm[l], a3tex_unit01);
 					a3demo_drawModelLighting(modelViewProjectionMat.m, modelViewMat.m, viewProjectionMat.m, viewMat.m, currentSceneObject->modelMat.m, currentDemoProgram, drawable[0], rgba4[0 + 3].v);
 				}
 				else if (l == 1)
@@ -380,12 +361,12 @@ void a3triangle_render(a3_DemoState const* demoState, a3_Demo_Triangle const* de
 	switch (pipeline)
 	{
 		// no framebuffer active for scene render
-	case shading_back:
+	case triangle_back:
 		// do nothing
 		break;
 
 		// scene was rendered to framebuffer
-	case shading_fbo:
+	case triangle_fbo:
 		// composite skybox
 		currentDemoProgram = demoState->displaySkybox ? demoState->prog_drawTexture : demoState->prog_drawColorUnif;
 		a3demo_drawModelTexturedColored_invertModel(modelViewProjectionMat.m, viewProjectionMat.m, demoState->skyboxObject->modelMat.m, a3mat4_identity.m, currentDemoProgram, demoState->draw_skybox, demoState->tex_skybox_clouds, skyblue);

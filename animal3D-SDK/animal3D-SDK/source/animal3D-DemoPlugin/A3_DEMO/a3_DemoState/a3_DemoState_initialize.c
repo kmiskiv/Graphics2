@@ -130,7 +130,7 @@ void a3demo_initScene(a3_DemoState *demoState)
 	demoState->displayWireframe = a3false;
 	demoState->displaySkybox = a3true;
 	demoState->displayHiddenVolumes = a3true;
-	demoState->displayPipeline = a3false;
+	demoState->displayPipeline = a3true;
 	demoState->updateAnimation = a3true;
 	demoState->stencilTest = a3false;
 	demoState->skipIntermediatePasses = a3false;
@@ -226,10 +226,13 @@ void a3demo_initScene(a3_DemoState *demoState)
 	demoState->torusObject->scale.x = 2.0f;
 	demoState->sphereObject->scaleMode = 1;		// uniform
 	demoState->cylinderObject->scaleMode = 2;	// non-uniform
-	demoState->torusObject->scaleMode = 1;		// uniform
+	demoState->torusObject->scaleMode = 1; // uniform
+	demoState->triangleObject->scaleMode = 1; 
 
 	demoState->sphereObject->position.x = +6.0f;
 	demoState->torusObject->position.x = -6.0f;
+	demoState->triangleObject->position.x = 0.0f;
+
 	if (demoState->verticalAxis)
 	{
 		demoState->planeObject->position.y = -2.0f;
@@ -247,52 +250,54 @@ void a3demo_initScene(a3_DemoState *demoState)
 		demoState->torusObject->position.z = +1.0f;
 		demoState->cylinderObject->position.y = +6.0f;
 		demoState->teapotObject->position.y = -6.0f;
+		demoState->triangleObject->position.y = 1.0f; 
 	}
 
 
-	// animation
-	demoState->segmentDuration = a3real_four;
-	demoState->segmentDurationInv = a3recip(demoState->segmentDuration);
-	demoState->segmentCount = 4;
-	a3real4SetReal3W(demoState->curveWaypoint[0].v, demoState->sphereObject->position.v, a3real_one);
-	a3real4SetReal3W(demoState->curveWaypoint[1].v, demoState->cylinderObject->position.v, a3real_one);
-	a3real4SetReal3W(demoState->curveWaypoint[2].v, demoState->torusObject->position.v, a3real_one);
-	a3real4SetReal3W(demoState->curveWaypoint[3].v, demoState->teapotObject->position.v, a3real_one);
-	for (i = 0; i < demoState->segmentCount; ++i)
-	{
-		// offset waypoints
-		demoState->curveWaypoint[i].z += a3real_two;
-		a3real3MulS(demoState->curveWaypoint[i].v, a3real_two);
+	//// animation
+	//demoState->segmentDuration = a3real_four;
+	//demoState->segmentDurationInv = a3recip(demoState->segmentDuration);
+	//demoState->segmentCount = 4;
+	//a3real4SetReal3W(demoState->curveWaypoint[0].v, demoState->sphereObject->position.v, a3real_one);
+	//a3real4SetReal3W(demoState->curveWaypoint[1].v, demoState->cylinderObject->position.v, a3real_one);
+	//a3real4SetReal3W(demoState->curveWaypoint[2].v, demoState->torusObject->position.v, a3real_one);
+	//a3real4SetReal3W(demoState->curveWaypoint[3].v, demoState->teapotObject->position.v, a3real_one);
+	//for (i = 0; i < demoState->segmentCount; ++i)
+	//{
+	//	// offset waypoints
+	//	demoState->curveWaypoint[i].z += a3real_two;
+	//	a3real3MulS(demoState->curveWaypoint[i].v, a3real_two);
 
-		// set the handle as a factor of the waypoint just for testing
-		demoState->curveHandle[i] = demoState->curveWaypoint[i];
-		a3real3ProductS(demoState->curveHandle[i].v, demoState->curveWaypoint[i].v, a3real_two);
-	}
+	//	// set the handle as a factor of the waypoint just for testing
+	//	demoState->curveHandle[i] = demoState->curveWaypoint[i];
+	//	a3real3ProductS(demoState->curveHandle[i].v, demoState->curveWaypoint[i].v, a3real_two);
+	//}
 
 
-	// skeleton
-	if (demoState->verticalAxis)
-	{
-		demoState->skeletonObject->position.z = -4.0f;
-		demoState->skeletonObject->euler.x = -90.0f;
-		demoState->skeletonObject->euler.z = +180.0f;
-	}
-	else
-	{
-		demoState->skeletonObject->position.y = +4.0f;
-		demoState->skeletonObject->euler.z = +180.0f;
-	}
+	//// skeleton
+	//if (demoState->verticalAxis)
+	//{
+	//	demoState->skeletonObject->position.z = -4.0f;
+	//	demoState->skeletonObject->euler.x = -90.0f;
+	//	demoState->skeletonObject->euler.z = +180.0f;
+	//}
+	//else
+	//{
+	//	demoState->skeletonObject->position.y = +4.0f;
+	//	demoState->skeletonObject->euler.z = +180.0f;
+	//}
 
 
 	// demo modes
-	a3shading_init(demoState, demoState->demoMode_shading);
-	a3pipelines_init(demoState, demoState->demoMode_pipelines);
-	a3keyframes_init(demoState, demoState->demoMode_keyframes);
+	//a3shading_init(demoState, demoState->demoMode_shading);
+	//a3pipelines_init(demoState, demoState->demoMode_pipelines);
+	//a3keyframes_init(demoState, demoState->demoMode_keyframes);
 	a3triangle_init(demoState, demoState->demoMode_triangle);
 	demoState->demoMode = demoState_triangle;
 
 	// active camera params
-	demoState->activeCamera = demoState->demoMode_pipelines->activeCamera;
+	demoState->activeCamera = demoState->demoMode_triangle->activeCamera;
+	//demoState->activeCamera = demoState->demoMode_pipelines->activeCamera;
 }
 
 // refresh non-asset scene objects (e.g. re-link pointers)

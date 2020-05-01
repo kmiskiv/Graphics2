@@ -212,7 +212,7 @@ A3DYLIBSYMBOL a3_DemoState *a3demoCB_load(a3_DemoState *demoState, a3boolean hot
 			a3demo_loadTextures(demoState);
 
 			// animation
-			a3demo_loadAnimation(demoState);
+			//a3demo_loadAnimation(demoState);
 
 			// scene objects
 			a3demo_initScene(demoState);
