@@ -1,4 +1,3 @@
-#pragma once
 
 /* A demo mode for my final project
 based off of the other demo mode files
@@ -9,6 +8,7 @@ Kayla Miskiv, Spring 2020 */
 #define __ANIMAL3D_DEMO_TRIANGLE_H
 
 
+#include "animal3D/animal3D.h"
 
 
 #ifdef __cplusplus
@@ -31,9 +31,6 @@ typedef enum a3_Demo_Triangles_InterpolationModeName	a3_Demo_Triangle_Interpolat
 	// program to use for rendering
 enum a3_Demo_Triangle_RenderProgramName
 {
-	triangle_renderSolid,		// solid color
-	triangle_renderTexture,		// texture sample
-	triangle_renderLambert,		// Lambert shading
 	triangle_renderPhong,		// Phong shading
 
 	triangle_render_max
@@ -44,8 +41,6 @@ enum a3_Demo_Triangle_RenderProgramName
 enum a3_Demo_Triangle_DisplayProgramName
 {
 	triangle_displayTexture,
-	triangle_displayTextureManipColor,
-	triangle_displayTextureManipTexcoord,
 
 	triangle_display_max
 };
@@ -55,6 +50,7 @@ enum a3_Demo_Triangle_DisplayProgramName
 enum a3_Demo_Triangle_ActiveCameraName
 {
 	triangle_cameraSceneViewer,	// scene viewing camera
+	triangle_cameraShadowLight,
 
 	triangle_camera_max
 };
@@ -62,27 +58,62 @@ enum a3_Demo_Triangle_ActiveCameraName
 // shading pipeline names
 enum a3_Demo_Triangle_PipelineName
 {
-	triangle_back,				// on-screen rendering with back buffer
-	triangle_fbo,				// off-screen rendering with MRT FBO
+	triangle_forward,				
+	//triangle_fbo,				// off-screen rendering with MRT FBO
 
 	triangle_pipeline_max
 };
 
 enum a3_Demo_Triangle_TargetName
 {
-	triangle_back_composite = 0,	// final composite color
-	triangle_target_back_max,
+	triangle_shadow_fragdepth = 0,
+	triangle_target_shadow_max,
 
-	triangle_fbo_composite = 0,	// final composite color
-	triangle_fbo_position,		// position attribute
-	triangle_fbo_normal,			// normal attribute
-	triangle_fbo_texcoord,		// texcoord attribute
-	triangle_fbo_diffuseTex,		// diffuse texture sample
-	triangle_fbo_specularTex,	// specular texture sample
-	triangle_fbo_diffuseLight,	// diffuse light total
-	triangle_fbo_specularLight,	// specular light total
-	triangle_fbo_fragdepth,		// fragment depth
-	triangle_target_fbo_max,
+	triangle_scene_finalcolor = 0,
+	triangle_scene_position,
+	triangle_scene_normal,
+	triangle_scene_texcoord,
+	triangle_scene_shadowcoord,
+	triangle_scene_shadowtest,
+	triangle_scene_diffuseLight,
+	triangle_scene_specularLight,
+	triangle_scene_fragdepth,
+	triangle_target_scene_max,
+
+	triangle_composite_finalcolor = 0,
+	triangle_target_composite_max,
+	
+	triangle_bright_finalcolor = 0,
+	triangle_bright_luminance,
+	triangle_target_bright_max,
+
+	triangle_blur_finalcolor = 0,
+	triangle_target_blur_max,
+
+	triangle_display_finalcolor = 0,
+	triangle_target_display_max,
+};
+
+enum a3_Demo_Triangle_PassName
+{
+	triangle_passShadow,			// capture shadow map
+
+	triangle_passScene,			// render scene objects
+
+	triangle_passComposite,		// composite for post-processing stage
+
+	triangle_passBright_2,		// bright pass for bloom (half screen size)
+	triangle_passBlurH_2,			// horizontal blur for bloom (half screen size)
+	triangle_passBlurV_2,			// horizontal blur for bloom (half screen size)
+	triangle_passBright_4,		// bright pass for bloom (quarter screen size)
+	triangle_passBlurH_4,			// horizontal blur for bloom (quarter screen size)
+	triangle_passBlurV_4,			// horizontal blur for bloom (quarter screen size)
+	triangle_passBright_8,		// bright pass for bloom (eighth screen size)
+	triangle_passBlurH_8,			// horizontal blur for bloom (eighth screen size)
+	triangle_passBlurV_8,			// horizontal blur for bloom (eighth screen size)
+	triangle_passBlend,			// bloom composite pass
+
+	triangle_pass_max
 };
 
 //-----------------------------------------------------------------------------
@@ -94,8 +125,10 @@ struct a3_Demo_Triangle
 	a3_Demo_Triangle_DisplayProgramName display;
 	a3_Demo_Triangle_ActiveCameraName activeCamera;
 
+	a3_Demo_Triangle_PassName pass; 
+
 	a3_Demo_Triangle_PipelineName pipeline;
-	a3_Demo_Triangle_TargetName targetIndex[triangle_pipeline_max], targetCount[triangle_pipeline_max];
+	a3_Demo_Triangle_TargetName targetIndex[triangle_pass_max], targetCount[triangle_pass_max];
 };
 
 
