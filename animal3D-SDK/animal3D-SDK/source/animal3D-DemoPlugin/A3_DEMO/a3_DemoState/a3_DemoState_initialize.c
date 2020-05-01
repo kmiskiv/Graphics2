@@ -228,6 +228,7 @@ void a3demo_initScene(a3_DemoState *demoState)
 	demoState->cylinderObject->scaleMode = 2;	// non-uniform
 	demoState->torusObject->scaleMode = 1; // uniform
 	demoState->triangleObject->scaleMode = 1; 
+	demoState->triangleObject->scale.x = 1.0f; 
 
 	demoState->sphereObject->position.x = +6.0f;
 	demoState->torusObject->position.x = -6.0f;
@@ -241,6 +242,7 @@ void a3demo_initScene(a3_DemoState *demoState)
 		demoState->torusObject->position.y = +1.0f;
 		demoState->cylinderObject->position.z = -6.0f;
 		demoState->teapotObject->position.z = +6.0f;
+		demoState->triangleObject->position.z = 2.0f; 
 	}
 	else
 	{
@@ -289,9 +291,9 @@ void a3demo_initScene(a3_DemoState *demoState)
 
 
 	// demo modes
-	//a3shading_init(demoState, demoState->demoMode_shading);
-	//a3pipelines_init(demoState, demoState->demoMode_pipelines);
-	//a3keyframes_init(demoState, demoState->demoMode_keyframes);
+	a3shading_init(demoState, demoState->demoMode_shading);
+	a3pipelines_init(demoState, demoState->demoMode_pipelines);
+	a3keyframes_init(demoState, demoState->demoMode_keyframes);
 	a3triangle_init(demoState, demoState->demoMode_triangle);
 	demoState->demoMode = demoState_triangle;
 

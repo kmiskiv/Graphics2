@@ -172,10 +172,13 @@ A3DYLIBSYMBOL a3_DemoState *a3demoCB_load(a3_DemoState *demoState, a3boolean hot
 		// stack object will be deleted at the end of the function
 		// good idea to set the whole block of memory to zero
 		demoState = (a3_DemoState *)malloc(stateSize);
+		
 		if (demoState)
 		{
 			// reset state
 			memset(demoState, 0, stateSize);
+
+			//demoState->demoMode = demoState_triangle;
 
 			// set up trig table (A3DM)
 			a3trigInit(trigSamplesPerDegree, demoState->trigTable);
@@ -192,7 +195,7 @@ A3DYLIBSYMBOL a3_DemoState *a3demoCB_load(a3_DemoState *demoState, a3boolean hot
 
 
 			// enable asset streaming between loads
-		//	demoState->streaming = a3true;
+			//demoState->streaming = a3true;
 
 
 			// create directory for data
@@ -497,7 +500,7 @@ A3DYLIBSYMBOL void a3demoCB_mouseWheel(a3_DemoState *demoState, a3i32 delta, a3i
 	switch (demoState->demoMode)
 	{
 	case demoState_shading:
-	case demoState_pipelines:
+	case demoState_triangle:
 		// can use this to change zoom
 		// zoom should be faster farther away
 		activeCamera = demoState->projector + demoState->activeCamera;
@@ -505,6 +508,7 @@ A3DYLIBSYMBOL void a3demoCB_mouseWheel(a3_DemoState *demoState, a3i32 delta, a3i
 		activeCamera->fovy = a3clamp(activeCamera->ctrlZoomSpeed, a3real_oneeighty - activeCamera->ctrlZoomSpeed, activeCamera->fovy);
 		a3demo_updateProjectorProjectionMat(activeCamera);
 		break;
+
 	}
 }
 

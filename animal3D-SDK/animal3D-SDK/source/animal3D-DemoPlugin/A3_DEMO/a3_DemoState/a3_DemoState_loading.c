@@ -173,7 +173,11 @@ void a3demo_loadGeometry(a3_DemoState *demoState)
 
 
 	// file streaming (if requested)
+	
 	a3_FileStream fileStream[1] = { 0 };
+	
+
+
 	const a3byte *const geometryStream = "./data/geom_data_gpro_coursebase.dat";
 
 	// geometry data
@@ -250,10 +254,13 @@ void a3demo_loadGeometry(a3_DemoState *demoState)
 		a3proceduralCreateDescriptorBox(displayShapes + 2, a3geomFlag_texcoords, 100.0f, 100.0f, 100.0f, 1, 1, 1);
 		a3proceduralCreateDescriptorPlane(displayShapes + 3, a3geomFlag_texcoords, a3geomAxis_default, 2.0f, 2.0f, 1, 1);
 		a3proceduralCreateDescriptorTriangle(displayShapes + 4, a3geomFlag_wireframe, a3geomAxis_x, 5.0f, 2.5f);
+		
+		
 		for (i = 0; i < displayShapesCount; ++i)
 		{
-			a3proceduralGenerateGeometryData(displayShapesData + i, displayShapes + i, 0);
+			a3ret geometryData = a3proceduralGenerateGeometryData(displayShapesData + i, displayShapes + i, 0); 
 			a3fileStreamWriteObject(fileStream, displayShapesData + i, (a3_FileStreamWriteFunc)a3geometrySaveDataBinary);
+			//a3fileStreamWriteObject(fileStream, displayShapesData + i, writeFunction);
 		}
 
 		// hidden volumes and shapes
@@ -267,6 +274,8 @@ void a3demo_loadGeometry(a3_DemoState *demoState)
 		for (i = 0; i < hiddenShapesCount; ++i)
 		{
 			a3proceduralGenerateGeometryData(hiddenShapesData + i, hiddenShapes + i, 0);
+			//a3i32 writeFunction = (a3_FileStreamWriteFunc)(a3geometrySaveDataBinary); 
+			//a3fileStreamWriteObject(fileStream, hiddenShapesData + i, writeFunction);
 			a3fileStreamWriteObject(fileStream, hiddenShapesData + i, (a3_FileStreamWriteFunc)a3geometrySaveDataBinary);
 		}
 
@@ -367,6 +376,9 @@ void a3demo_loadGeometry(a3_DemoState *demoState)
 	a3geometryGenerateVertexArray(vao, "vao:pos+col", displayShapesData + 0, vbo_ibo, sharedVertexStorage);
 	currentDrawable = demoState->draw_axes;
 	sharedVertexStorage += a3geometryGenerateDrawable(currentDrawable, displayShapesData + 0, vao, vbo_ibo, sceneCommonIndexFormat, 0, 0);
+	//currentDrawable = demoState->draw_triangle;
+	//currentDrawable->primitive = a3prim_triangles; 
+	//sharedVertexStorage += a3geometryGenerateDrawable(currentDrawable, displayShapesData + 4, vao, vbo_ibo, sceneCommonIndexFormat, 0, 0);
 
 	// skybox, unit quad: position and texture coordinates
 	vao = demoState->vao_position_texcoord;
@@ -375,8 +387,8 @@ void a3demo_loadGeometry(a3_DemoState *demoState)
 	sharedVertexStorage += a3geometryGenerateDrawable(currentDrawable, displayShapesData + 2, vao, vbo_ibo, sceneCommonIndexFormat, 0, 0);
 	currentDrawable = demoState->draw_unitquad;
 	sharedVertexStorage += a3geometryGenerateDrawable(currentDrawable, displayShapesData + 3, vao, vbo_ibo, sceneCommonIndexFormat, 0, 0);
-	currentDrawable = demoState->draw_triangle;
-	sharedVertexStorage += a3geometryGenerateDrawable(currentDrawable, displayShapesData + 4, vao, vbo_ibo, sceneCommonIndexFormat, 0, 0);
+	
+	
 
 
 
@@ -394,6 +406,8 @@ void a3demo_loadGeometry(a3_DemoState *demoState)
 	sharedVertexStorage += a3geometryGenerateDrawable(currentDrawable, proceduralShapesData + 2, vao, vbo_ibo, sceneCommonIndexFormat, 0, 0);
 	currentDrawable = demoState->draw_torus;
 	sharedVertexStorage += a3geometryGenerateDrawable(currentDrawable, proceduralShapesData + 3, vao, vbo_ibo, sceneCommonIndexFormat, 0, 0);
+	//currentDrawable = demoState->draw_triangle;
+	//sharedVertexStorage += a3geometryGenerateDrawable(currentDrawable, proceduralShapesData + 4, vao, vbo_ibo, sceneCommonIndexFormat, 0, 0);
 	currentDrawable = demoState->draw_teapot;
 	sharedVertexStorage += a3geometryGenerateDrawable(currentDrawable, loadedModelsData + 0, vao, vbo_ibo, sceneCommonIndexFormat, 0, 0);
 	
@@ -447,75 +461,75 @@ void a3demo_loadShaders(a3_DemoState *demoState)
 			// vertex shaders
 			// base
 			a3_DemoStateShader
-				passthru_vs[1],
-				passthru_transform_vs[1],
-				passColor_transform_vs[1],
-				passthru_transform_instanced_vs[1],
-				passColor_transform_instanced_vs[1];
-			// 02-shading
+				//	passthru_vs[1],
+				passthru_transform_vs[1];
+			//	passColor_transform_vs[1],
+			//	passthru_transform_instanced_vs[1],
+			//	passColor_transform_instanced_vs[1];
+			//// 02-shading
 			a3_DemoStateShader
-				passTexcoord_transform_vs[1],
-				passLightingData_transform_vs[1];
-			// 04-multipass
-			a3_DemoStateShader
-				passLightingData_shadowCoord_transform_vs[1];
-			// 06-deferred
-			a3_DemoStateShader
-				passAtlasTexcoord_transform_vs[1],
-				passLightingData_transform_bias_vs[1],
-				passBiasedClipCoord_transform_instanced_vs[1];
-			// 07-curves
+				passTexcoord_transform_vs[1];
+			//	passLightingData_transform_vs[1];
+			//// 04-multipass
+			//a3_DemoStateShader
+			//	passLightingData_shadowCoord_transform_vs[1];
+			//// 06-deferred
+			//a3_DemoStateShader
+			//	passAtlasTexcoord_transform_vs[1],
+			//	passLightingData_transform_bias_vs[1],
+			//	passBiasedClipCoord_transform_instanced_vs[1];
+			//// 07-curves
 			a3_DemoStateShader
 				passTangentBasis_transform_instanced_vs[1];
-			// 07-keyframes
-			a3_DemoStateShader
-				passColor_hierarchy_transform_instanced_vs[1],
-				passTangentBasis_transform_instanced_morph_vs[1];
+			//// 07-keyframes
+			//a3_DemoStateShader
+			//	passColor_hierarchy_transform_instanced_vs[1],
+			//	passTangentBasis_transform_instanced_morph_vs[1];
 			// final
 			a3_DemoStateShader
 				finalvertexshader_vs[1]; 
 
-			// geometry shaders
-			// 07-curves
+			//// geometry shaders
+			//// 07-curves
 			a3_DemoStateShader
-				drawCurveSegment_gs[1],
+			//	drawCurveSegment_gs[1],
 				drawOverlays_tangents_wireframe_gs[1];
 
-			// fragment shaders
-			// base
+			//// fragment shaders
+			//// base
 			a3_DemoStateShader
 				drawColorUnif_fs[1],
 				drawColorAttrib_fs[1];
-			// 02-shading
+			//// 02-shading
 			a3_DemoStateShader
-				drawTexture_fs[1],
-				drawLambert_multi_fs[1],
-				drawPhong_multi_fs[1],
-				drawNonphoto_multi_fs[1];
-			// 03-framebuffer
-			a3_DemoStateShader
-				drawTexture_mrt_fs[1],
-				drawTexture_colorManip_fs[1],
-				drawTexture_coordManip_fs[1],
-				drawLambert_multi_mrt_fs[1],
-				drawPhong_multi_mrt_fs[1],
-				drawNonphoto_multi_mrt_fs[1];
-			// 04-multipass
-			a3_DemoStateShader
-				drawTexture_outline_fs[1],
-				drawPhong_multi_shadow_mrt_fs[1];
-			// 05-bloom
+				drawTexture_fs[1];
+			//	drawLambert_multi_fs[1],
+			//	drawPhong_multi_fs[1],
+			//	drawNonphoto_multi_fs[1];
+			//// 03-framebuffer
+			//a3_DemoStateShader
+			//	drawTexture_mrt_fs[1],
+			//	drawTexture_colorManip_fs[1],
+			//	drawTexture_coordManip_fs[1],
+			//	drawLambert_multi_mrt_fs[1],
+			//	drawPhong_multi_mrt_fs[1],
+			//	drawNonphoto_multi_mrt_fs[1];
+			//// 04-multipass
+			//a3_DemoStateShader
+			//	drawTexture_outline_fs[1],
+			//	drawPhong_multi_shadow_mrt_fs[1];
+			//// 05-bloom
 			a3_DemoStateShader
 				drawTexture_brightPass_fs[1],
 				drawTexture_blurGaussian_fs[1],
 				drawTexture_blendScreen4_fs[1];
-			// 06-deferred
-			a3_DemoStateShader
-				drawLightingData_fs[1],
-				drawPhong_multi_deferred_fs[1],
-				drawPhongVolume_fs[1],
-				drawPhongComposite_fs[1];
-			// 07-curves
+			//// 06-deferred
+			//a3_DemoStateShader
+			//	drawLightingData_fs[1],
+			//	drawPhong_multi_deferred_fs[1],
+			//	drawPhongVolume_fs[1],
+			//	drawPhongComposite_fs[1];
+			//// 07-curves
 			a3_DemoStateShader
 				drawPhong_multi_forward_mrt_fs[1];
 			//final 
@@ -532,66 +546,66 @@ void a3demo_loadShaders(a3_DemoState *demoState)
 			// DO NOT SUBMIT WORK USING ENCODED SHADERS OR YOU WILL GET ZERO!!!
 
 			// vs
-			// base
-			{ { { 0 },	"shdr-vs:passthru",					a3shader_vertex  ,	1,{ A3_DEMO_VS"passthru_vs4x.glsl" } } },
+			//// base
+			//{ { { 0 },	"shdr-vs:passthru",					a3shader_vertex  ,	1,{ A3_DEMO_VS"passthru_vs4x.glsl" } } },
 			{ { { 0 },	"shdr-vs:passthru-trans",			a3shader_vertex  ,	1,{ A3_DEMO_VS"passthru_transform_vs4x.glsl" } } },
-			{ { { 0 },	"shdr-vs:pass-col-trans",			a3shader_vertex  ,	1,{ A3_DEMO_VS"passColor_transform_vs4x.glsl" } } },
-			{ { { 0 },	"shdr-vs:passthru-trans-inst",		a3shader_vertex  ,	1,{ A3_DEMO_VS"passthru_transform_instanced_vs4x.glsl" } } },
-			{ { { 0 },	"shdr-vs:pass-col-trans-inst",		a3shader_vertex  ,	1,{ A3_DEMO_VS"passColor_transform_instanced_vs4x.glsl" } } },
-			// 02-shading
+			//{ { { 0 },	"shdr-vs:pass-col-trans",			a3shader_vertex  ,	1,{ A3_DEMO_VS"passColor_transform_vs4x.glsl" } } },
+			//{ { { 0 },	"shdr-vs:passthru-trans-inst",		a3shader_vertex  ,	1,{ A3_DEMO_VS"passthru_transform_instanced_vs4x.glsl" } } },
+			//{ { { 0 },	"shdr-vs:pass-col-trans-inst",		a3shader_vertex  ,	1,{ A3_DEMO_VS"passColor_transform_instanced_vs4x.glsl" } } },
+			//// 02-shading
 			{ { { 0 },	"shdr-vs:pass-tex-trans",			a3shader_vertex  ,	1,{ A3_DEMO_VS"02-shading/passTexcoord_transform_vs4x.glsl" } } },
-			{ { { 0 },	"shdr-vs:pass-light-trans",			a3shader_vertex  ,	1,{ A3_DEMO_VS"02-shading/passLightingData_transform_vs4x.glsl" } } },
-			// 04-multipass
-			{ { { 0 },	"shdr-vs:pass-light-shadow-trans",	a3shader_vertex  ,	1,{ A3_DEMO_VS"04-multipass/passLightingData_shadowCoord_transform_vs4x.glsl" } } },
-			// 06-deferred
-			{ { { 0 },	"shdr-vs:pass-atlas-tex-trans",		a3shader_vertex  ,	1,{ A3_DEMO_VS"06-deferred/e/passAtlasTexcoord_transform_vs4x.glsl" } } },
-			{ { { 0 },	"shdr-vs:pass-light-trans-bias",	a3shader_vertex  ,	1,{ A3_DEMO_VS"06-deferred/e/passLightingData_transform_bias_vs4x.glsl" } } },
-			{ { { 0 },	"shdr-vs:pass-biasedclip-inst",		a3shader_vertex  ,	1,{ A3_DEMO_VS"06-deferred/e/passBiasedClipCoord_transform_instanced_vs4x.glsl" } } },
-			// 07-curves
+			//{ { { 0 },	"shdr-vs:pass-light-trans",			a3shader_vertex  ,	1,{ A3_DEMO_VS"02-shading/e/passLightingData_transform_vs4x.glsl" } } },
+			//// 04-multipass
+			//{ { { 0 },	"shdr-vs:pass-light-shadow-trans",	a3shader_vertex  ,	1,{ A3_DEMO_VS"04-multipass/e/passLightingData_shadowCoord_transform_vs4x.glsl" } } },
+			//// 06-deferred
+			//{ { { 0 },	"shdr-vs:pass-atlas-tex-trans",		a3shader_vertex  ,	1,{ A3_DEMO_VS"06-deferred/e/passAtlasTexcoord_transform_vs4x.glsl" } } },
+			//{ { { 0 },	"shdr-vs:pass-light-trans-bias",	a3shader_vertex  ,	1,{ A3_DEMO_VS"06-deferred/e/passLightingData_transform_bias_vs4x.glsl" } } },
+			//{ { { 0 },	"shdr-vs:pass-biasedclip-inst",		a3shader_vertex  ,	1,{ A3_DEMO_VS"06-deferred/e/passBiasedClipCoord_transform_instanced_vs4x.glsl" } } },
+			//// 07-curves
 			{ { { 0 },	"shdr-vs:pass-tangent-trans-inst",	a3shader_vertex  ,	1,{ A3_DEMO_VS"07-curves/passTangentBasis_transform_instanced_vs4x.glsl" } } },
-			// 07-keyframes
-			{ { { 0 },	"shdr-vs:pass-col-hierarchy-t-i",	a3shader_vertex  ,	1,{ A3_DEMO_VS"07-keyframes/passColor_hierarchy_transform_instanced_vs4x.glsl" } } },
-			{ { { 0 },	"shdr-vs:pass-tb-trans-morph",		a3shader_vertex  ,	1,{ A3_DEMO_VS"07-keyframes/passTangentBasis_transform_instanced_morph_vs4x.glsl" } } },
+			//// 07-keyframes
+			//{ { { 0 },	"shdr-vs:pass-col-hierarchy-t-i",	a3shader_vertex  ,	1,{ A3_DEMO_VS"07-keyframes/e/passColor_hierarchy_transform_instanced_vs4x.glsl" } } },
+			//{ { { 0 },	"shdr-vs:pass-tb-trans-morph",		a3shader_vertex  ,	1,{ A3_DEMO_VS"07-keyframes/e/passTangentBasis_transform_instanced_morph_vs4x.glsl" } } },
 			//final	
-			{ { { 0 }, "shdr-vs:finalvertexshader", a3shader_vertex, 1, { A3_DEMO_VS"final/finalvertexshader_vs4x.glsl" } } },
+			{ { { 0 },		"shdr-vs:finalvertexshader",		a3shader_vertex,	1,{ A3_DEMO_VS"final/finalvertexshader_vs4x.glsl" } } },
 
 			// gs
 			// 07-curves
-			{ { { 0 },	"shdr-gs:draw-curve-segment",		a3shader_geometry,	1,{ A3_DEMO_GS"07-curves/e/drawCurveSegment_gs4x.glsl" } } },
+			//{ { { 0 },	"shdr-gs:draw-curve-segment",		a3shader_geometry,	1,{ A3_DEMO_GS"07-curves/e/drawCurveSegment_gs4x.glsl" } } },
 			{ { { 0 },	"shdr-gs:draw-overlays-tb-wire",	a3shader_geometry,	1,{ A3_DEMO_GS"07-curves/e/drawOverlays_tangents_wireframe_gs4x.glsl" } } },
 
 			// fs
-			// base
+			//// base
 			{ { { 0 },	"shdr-fs:draw-col-unif",			a3shader_fragment,	1,{ A3_DEMO_FS"drawColorUnif_fs4x.glsl" } } },
 			{ { { 0 },	"shdr-fs:draw-col-attr",			a3shader_fragment,	1,{ A3_DEMO_FS"drawColorAttrib_fs4x.glsl" } } },
-			// 02-shading
+			//// 02-shading
 			{ { { 0 },	"shdr-fs:draw-tex",					a3shader_fragment,	1,{ A3_DEMO_FS"02-shading/drawTexture_fs4x.glsl" } } },
-			{ { { 0 },	"shdr-fs:draw-Lambert-multi",		a3shader_fragment,	1,{ A3_DEMO_FS"02-shading/drawLambert_multi_fs4x.glsl" } } },
-			{ { { 0 },	"shdr-fs:draw-Phong-multi",			a3shader_fragment,	1,{ A3_DEMO_FS"02-shading/drawPhong_multi_fs4x.glsl" } } },
-			{ { { 0 },	"shdr-fs:draw-nonphoto-multi",		a3shader_fragment,	1,{ A3_DEMO_FS"02-shading/drawNonphoto_multi_fs4x.glsl" } } },
-			// 03-framebuffer
-			{ { { 0 },	"shdr-fs:draw-tex-mrt",				a3shader_fragment,	1,{ A3_DEMO_FS"03-framebuffer/drawTexture_mrt_fs4x.glsl" } } },
-			{ { { 0 },	"shdr-fs:draw-tex-colormanip",		a3shader_fragment,	1,{ A3_DEMO_FS"03-framebuffer/drawTexture_colorManip_fs4x.glsl" } } },
-			{ { { 0 },	"shdr-fs:draw-tex-coordmanip",		a3shader_fragment,	1,{ A3_DEMO_FS"03-framebuffer/drawTexture_coordManip_fs4x.glsl" } } },
-			{ { { 0 },	"shdr-fs:draw-Lambert-multi-mrt",	a3shader_fragment,	1,{ A3_DEMO_FS"03-framebuffer/drawLambert_multi_mrt_fs4x.glsl" } } },
-			{ { { 0 },	"shdr-fs:draw-Phong-multi-mrt",		a3shader_fragment,	1,{ A3_DEMO_FS"03-framebuffer/drawPhong_multi_mrt_fs4x.glsl" } } },
-			{ { { 0 },	"shdr-fs:draw-nonphoto-multi-mrt",	a3shader_fragment,	1,{ A3_DEMO_FS"03-framebuffer/e/drawNonphoto_multi_mrt_fs4x.glsl" } } },
-			// 04-multipass
-			{ { { 0 },	"shdr-fs:draw-tex-outline",			a3shader_fragment,	1,{ A3_DEMO_FS"04-multipass/drawTexture_outline_fs4x.glsl" } } },
-			{ { { 0 },	"shdr-fs:draw-Phong-multi-shadow",	a3shader_fragment,	1,{ A3_DEMO_FS"04-multipass/drawPhong_multi_shadow_mrt_fs4x.glsl" } } },
-			// 05-bloom
+			//{ { { 0 },	"shdr-fs:draw-Lambert-multi",		a3shader_fragment,	1,{ A3_DEMO_FS"02-shading/e/drawLambert_multi_fs4x.glsl" } } },
+			//{ { { 0 },	"shdr-fs:draw-Phong-multi",			a3shader_fragment,	1,{ A3_DEMO_FS"02-shading/e/drawPhong_multi_fs4x.glsl" } } },
+			//{ { { 0 },	"shdr-fs:draw-nonphoto-multi",		a3shader_fragment,	1,{ A3_DEMO_FS"02-shading/e/drawNonphoto_multi_fs4x.glsl" } } },
+			//// 03-framebuffer
+			//{ { { 0 },	"shdr-fs:draw-tex-mrt",				a3shader_fragment,	1,{ A3_DEMO_FS"03-framebuffer/e/drawTexture_mrt_fs4x.glsl" } } },
+			//{ { { 0 },	"shdr-fs:draw-tex-colormanip",		a3shader_fragment,	1,{ A3_DEMO_FS"03-framebuffer/e/drawTexture_colorManip_fs4x.glsl" } } },
+			//{ { { 0 },	"shdr-fs:draw-tex-coordmanip",		a3shader_fragment,	1,{ A3_DEMO_FS"03-framebuffer/e/drawTexture_coordManip_fs4x.glsl" } } },
+			//{ { { 0 },	"shdr-fs:draw-Lambert-multi-mrt",	a3shader_fragment,	1,{ A3_DEMO_FS"03-framebuffer/e/drawLambert_multi_mrt_fs4x.glsl" } } },
+			//{ { { 0 },	"shdr-fs:draw-Phong-multi-mrt",		a3shader_fragment,	1,{ A3_DEMO_FS"03-framebuffer/e/drawPhong_multi_mrt_fs4x.glsl" } } },
+			//{ { { 0 },	"shdr-fs:draw-nonphoto-multi-mrt",	a3shader_fragment,	1,{ A3_DEMO_FS"03-framebuffer/e/drawNonphoto_multi_mrt_fs4x.glsl" } } },
+			//// 04-multipass
+			//{ { { 0 },	"shdr-fs:draw-tex-outline",			a3shader_fragment,	1,{ A3_DEMO_FS"04-multipass/e/drawTexture_outline_fs4x.glsl" } } },
+			//{ { { 0 },	"shdr-fs:draw-Phong-multi-shadow",	a3shader_fragment,	1,{ A3_DEMO_FS"04-multipass/e/drawPhong_multi_shadow_mrt_fs4x.glsl" } } },
+			//// 05-bloom
 			{ { { 0 },	"shdr-fs:draw-tex-bright",			a3shader_fragment,	1,{ A3_DEMO_FS"05-bloom/e/drawTexture_brightPass_fs4x.glsl" } } },
 			{ { { 0 },	"shdr-fs:draw-tex-blur",			a3shader_fragment,	1,{ A3_DEMO_FS"05-bloom/e/drawTexture_blurGaussian_fs4x.glsl" } } },
 			{ { { 0 },	"shdr-fs:draw-tex-blend4",			a3shader_fragment,	1,{ A3_DEMO_FS"05-bloom/e/drawTexture_blendScreen4_fs4x.glsl" } } },
-			// 06-deferred
-			{ { { 0 },	"shdr-fs:draw-lightingdata",		a3shader_fragment,	1,{ A3_DEMO_FS"06-deferred/e/drawLightingData_fs4x.glsl" } } },
-			{ { { 0 },	"shdr-fs:draw-Phong-multi-def",		a3shader_fragment,	1,{ A3_DEMO_FS"06-deferred/e/drawPhong_multi_deferred_fs4x.glsl" } } },
-			{ { { 0 },	"shdr-fs:draw-Phong-volume",		a3shader_fragment,	1,{ A3_DEMO_FS"06-deferred/e/drawPhongVolume_fs4x.glsl" } } },
-			{ { { 0 },	"shdr-fs:draw-Phong-composite",		a3shader_fragment,	1,{ A3_DEMO_FS"06-deferred/e/drawPhongComposite_fs4x.glsl" } } },
-			// 07-curves
+			//// 06-deferred
+			//{ { { 0 },	"shdr-fs:draw-lightingdata",		a3shader_fragment,	1,{ A3_DEMO_FS"06-deferred/e/drawLightingData_fs4x.glsl" } } },
+			//{ { { 0 },	"shdr-fs:draw-Phong-multi-def",		a3shader_fragment,	1,{ A3_DEMO_FS"06-deferred/e/drawPhong_multi_deferred_fs4x.glsl" } } },
+			//{ { { 0 },	"shdr-fs:draw-Phong-volume",		a3shader_fragment,	1,{ A3_DEMO_FS"06-deferred/e/drawPhongVolume_fs4x.glsl" } } },
+			//{ { { 0 },	"shdr-fs:draw-Phong-composite",		a3shader_fragment,	1,{ A3_DEMO_FS"06-deferred/e/drawPhongComposite_fs4x.glsl" } } },
+			//// 07-curves
 			{ { { 0 },	"shdr-fs:draw-Phong-mul-fwd-mrt",	a3shader_fragment,	1,{ A3_DEMO_FS"07-curves/drawPhong_multi_forward_mrt_fs4x.glsl" } } },
 			//final
-			{ { { 0 }, "shdr-fs:finalfragshader",			a3shader_fragment,  1,{ A3_DEMO_FS"final/finalgragshader_fs4x.glsl" } } },
+			{ { { 0 }, "shdr-fs:finalfragshader",			a3shader_fragment,  1,{ A3_DEMO_FS"final/finalfragshader_fs4x.glsl" } } },
 
 
 		}
@@ -627,135 +641,135 @@ void a3demo_loadShaders(a3_DemoState *demoState)
 	currentDemoProg = demoState->prog_transform;
 	a3shaderProgramCreate(currentDemoProg->program, "prog:transform");
 	a3shaderProgramAttachShader(currentDemoProg->program, shaderList.passthru_transform_vs->shader);
-	// transform-only program with instancing
-	currentDemoProg = demoState->prog_transform_instanced;
-	a3shaderProgramCreate(currentDemoProg->program, "prog:transform-inst");
-	a3shaderProgramAttachShader(currentDemoProg->program, shaderList.passthru_transform_instanced_vs->shader);
-	// uniform color program
+	//// transform-only program with instancing
+	//currentDemoProg = demoState->prog_transform_instanced;
+	//a3shaderProgramCreate(currentDemoProg->program, "prog:transform-inst");
+	//a3shaderProgramAttachShader(currentDemoProg->program, shaderList.passthru_transform_instanced_vs->shader);
+	//// uniform color program
 	currentDemoProg = demoState->prog_drawColorUnif;
 	a3shaderProgramCreate(currentDemoProg->program, "prog:draw-col-unif");
 	a3shaderProgramAttachShader(currentDemoProg->program, shaderList.passthru_transform_vs->shader);
 	a3shaderProgramAttachShader(currentDemoProg->program, shaderList.drawColorUnif_fs->shader);
-	// color attrib program
-	currentDemoProg = demoState->prog_drawColorAttrib;
-	a3shaderProgramCreate(currentDemoProg->program, "prog:draw-col-attr");
-	a3shaderProgramAttachShader(currentDemoProg->program, shaderList.passColor_transform_vs->shader);
-	a3shaderProgramAttachShader(currentDemoProg->program, shaderList.drawColorAttrib_fs->shader);
-	// uniform color program with instancing
-	currentDemoProg = demoState->prog_drawColorUnif_instanced;
-	a3shaderProgramCreate(currentDemoProg->program, "prog:draw-col-unif-inst");
-	a3shaderProgramAttachShader(currentDemoProg->program, shaderList.passthru_transform_instanced_vs->shader);
-	a3shaderProgramAttachShader(currentDemoProg->program, shaderList.drawColorUnif_fs->shader);
-	// color attrib program with instancing
-	currentDemoProg = demoState->prog_drawColorAttrib_instanced;
-	a3shaderProgramCreate(currentDemoProg->program, "prog:draw-col-attr-inst");
-	a3shaderProgramAttachShader(currentDemoProg->program, shaderList.passColor_transform_instanced_vs->shader);
-	a3shaderProgramAttachShader(currentDemoProg->program, shaderList.drawColorAttrib_fs->shader);
+	//// color attrib program
+	//currentDemoProg = demoState->prog_drawColorAttrib;
+	//a3shaderProgramCreate(currentDemoProg->program, "prog:draw-col-attr");
+	//a3shaderProgramAttachShader(currentDemoProg->program, shaderList.passColor_transform_vs->shader);
+	//a3shaderProgramAttachShader(currentDemoProg->program, shaderList.drawColorAttrib_fs->shader);
+	//// uniform color program with instancing
+	//currentDemoProg = demoState->prog_drawColorUnif_instanced;
+	//a3shaderProgramCreate(currentDemoProg->program, "prog:draw-col-unif-inst");
+	//a3shaderProgramAttachShader(currentDemoProg->program, shaderList.passthru_transform_instanced_vs->shader);
+	//a3shaderProgramAttachShader(currentDemoProg->program, shaderList.drawColorUnif_fs->shader);
+	//// color attrib program with instancing
+	//currentDemoProg = demoState->prog_drawColorAttrib_instanced;
+	//a3shaderProgramCreate(currentDemoProg->program, "prog:draw-col-attr-inst");
+	//a3shaderProgramAttachShader(currentDemoProg->program, shaderList.passColor_transform_instanced_vs->shader);
+	//a3shaderProgramAttachShader(currentDemoProg->program, shaderList.drawColorAttrib_fs->shader);
 
-	// 02-shading programs: 
-	// texturing program
+	//// 02-shading programs: 
+	//// texturing program
 	currentDemoProg = demoState->prog_drawTexture;
 	a3shaderProgramCreate(currentDemoProg->program, "prog:draw-tex");
 	a3shaderProgramAttachShader(currentDemoProg->program, shaderList.passTexcoord_transform_vs->shader);
 	a3shaderProgramAttachShader(currentDemoProg->program, shaderList.drawTexture_fs->shader);
 	// Lambert shading program
-	currentDemoProg = demoState->prog_drawLambert_multi;
-	a3shaderProgramCreate(currentDemoProg->program, "prog:draw-Lambert-multi");
-	a3shaderProgramAttachShader(currentDemoProg->program, shaderList.passLightingData_transform_vs->shader);
-	a3shaderProgramAttachShader(currentDemoProg->program, shaderList.drawLambert_multi_fs->shader);
-	// Phong shading program
-	currentDemoProg = demoState->prog_drawPhong_multi;
-	a3shaderProgramCreate(currentDemoProg->program, "prog:draw-Phong-multi");
-	a3shaderProgramAttachShader(currentDemoProg->program, shaderList.passLightingData_transform_vs->shader);
-	a3shaderProgramAttachShader(currentDemoProg->program, shaderList.drawPhong_multi_fs->shader);
-	// nonphotorealistic shading program
-	currentDemoProg = demoState->prog_drawNonphoto_multi;
-	a3shaderProgramCreate(currentDemoProg->program, "prog:draw-nonphoto-multi");
-	a3shaderProgramAttachShader(currentDemoProg->program, shaderList.passLightingData_transform_vs->shader);
-	a3shaderProgramAttachShader(currentDemoProg->program, shaderList.drawNonphoto_multi_fs->shader);
+	//currentDemoProg = demoState->prog_drawLambert_multi;
+	//a3shaderProgramCreate(currentDemoProg->program, "prog:draw-Lambert-multi");
+	//a3shaderProgramAttachShader(currentDemoProg->program, shaderList.passLightingData_transform_vs->shader);
+	//a3shaderProgramAttachShader(currentDemoProg->program, shaderList.drawLambert_multi_fs->shader);
+	//// Phong shading program
+	//currentDemoProg = demoState->prog_drawPhong_multi;
+	//a3shaderProgramCreate(currentDemoProg->program, "prog:draw-Phong-multi");
+	//a3shaderProgramAttachShader(currentDemoProg->program, shaderList.passLightingData_transform_vs->shader);
+	//a3shaderProgramAttachShader(currentDemoProg->program, shaderList.drawPhong_multi_fs->shader);
+	//// nonphotorealistic shading program
+	//currentDemoProg = demoState->prog_drawNonphoto_multi;
+	//a3shaderProgramCreate(currentDemoProg->program, "prog:draw-nonphoto-multi");
+	//a3shaderProgramAttachShader(currentDemoProg->program, shaderList.passLightingData_transform_vs->shader);
+	//a3shaderProgramAttachShader(currentDemoProg->program, shaderList.drawNonphoto_multi_fs->shader);
 
-	// 03-framebuffer programs: 
-	// texturing program with MRT
-	currentDemoProg = demoState->prog_drawTexture_mrt;
-	a3shaderProgramCreate(currentDemoProg->program, "prog:draw-tex-mrt");
-	a3shaderProgramAttachShader(currentDemoProg->program, shaderList.passTexcoord_transform_vs->shader);
-	a3shaderProgramAttachShader(currentDemoProg->program, shaderList.drawTexture_mrt_fs->shader);
-	// Lambert shading program with MRT
-	currentDemoProg = demoState->prog_drawLambert_multi_mrt;
-	a3shaderProgramCreate(currentDemoProg->program, "prog:draw-Lambert-multi-mrt");
-	a3shaderProgramAttachShader(currentDemoProg->program, shaderList.passLightingData_transform_vs->shader);
-	a3shaderProgramAttachShader(currentDemoProg->program, shaderList.drawLambert_multi_mrt_fs->shader);
-	// Phong shading program with MRT
-	currentDemoProg = demoState->prog_drawPhong_multi_mrt;
-	a3shaderProgramCreate(currentDemoProg->program, "prog:draw-Phong-multi-mrt");
-	a3shaderProgramAttachShader(currentDemoProg->program, shaderList.passLightingData_transform_vs->shader);
-	a3shaderProgramAttachShader(currentDemoProg->program, shaderList.drawPhong_multi_mrt_fs->shader);
-	// nonphotorealistic shading program with MRT
-	currentDemoProg = demoState->prog_drawNonphoto_multi_mrt;
-	a3shaderProgramCreate(currentDemoProg->program, "prog:draw-nonphoto-multi-mrt");
-	a3shaderProgramAttachShader(currentDemoProg->program, shaderList.passLightingData_transform_vs->shader);
-	a3shaderProgramAttachShader(currentDemoProg->program, shaderList.drawNonphoto_multi_mrt_fs->shader);
-	// texturing with color manipulation
-	currentDemoProg = demoState->prog_drawTexture_colorManip;
-	a3shaderProgramCreate(currentDemoProg->program, "prog:draw-tex-colormanip");
-	a3shaderProgramAttachShader(currentDemoProg->program, shaderList.passTexcoord_transform_vs->shader);
-	a3shaderProgramAttachShader(currentDemoProg->program, shaderList.drawTexture_colorManip_fs->shader);
-	// texturing with texcoord manipulation
-	currentDemoProg = demoState->prog_drawTexture_coordManip;
-	a3shaderProgramCreate(currentDemoProg->program, "prog:draw-tex-coordmanip");
-	a3shaderProgramAttachShader(currentDemoProg->program, shaderList.passTexcoord_transform_vs->shader);
-	a3shaderProgramAttachShader(currentDemoProg->program, shaderList.drawTexture_coordManip_fs->shader);
+	//// 03-framebuffer programs: 
+	//// texturing program with MRT
+	//currentDemoProg = demoState->prog_drawTexture_mrt;
+	//a3shaderProgramCreate(currentDemoProg->program, "prog:draw-tex-mrt");
+	//a3shaderProgramAttachShader(currentDemoProg->program, shaderList.passTexcoord_transform_vs->shader);
+	//a3shaderProgramAttachShader(currentDemoProg->program, shaderList.drawTexture_mrt_fs->shader);
+	//// Lambert shading program with MRT
+	//currentDemoProg = demoState->prog_drawLambert_multi_mrt;
+	//a3shaderProgramCreate(currentDemoProg->program, "prog:draw-Lambert-multi-mrt");
+	//a3shaderProgramAttachShader(currentDemoProg->program, shaderList.passLightingData_transform_vs->shader);
+	//a3shaderProgramAttachShader(currentDemoProg->program, shaderList.drawLambert_multi_mrt_fs->shader);
+	//// Phong shading program with MRT
+	//currentDemoProg = demoState->prog_drawPhong_multi_mrt;
+	//a3shaderProgramCreate(currentDemoProg->program, "prog:draw-Phong-multi-mrt");
+	//a3shaderProgramAttachShader(currentDemoProg->program, shaderList.passLightingData_transform_vs->shader);
+	//a3shaderProgramAttachShader(currentDemoProg->program, shaderList.drawPhong_multi_mrt_fs->shader);
+	//// nonphotorealistic shading program with MRT
+	//currentDemoProg = demoState->prog_drawNonphoto_multi_mrt;
+	//a3shaderProgramCreate(currentDemoProg->program, "prog:draw-nonphoto-multi-mrt");
+	//a3shaderProgramAttachShader(currentDemoProg->program, shaderList.passLightingData_transform_vs->shader);
+	//a3shaderProgramAttachShader(currentDemoProg->program, shaderList.drawNonphoto_multi_mrt_fs->shader);
+	//// texturing with color manipulation
+	//currentDemoProg = demoState->prog_drawTexture_colorManip;
+	//a3shaderProgramCreate(currentDemoProg->program, "prog:draw-tex-colormanip");
+	//a3shaderProgramAttachShader(currentDemoProg->program, shaderList.passTexcoord_transform_vs->shader);
+	//a3shaderProgramAttachShader(currentDemoProg->program, shaderList.drawTexture_colorManip_fs->shader);
+	//// texturing with texcoord manipulation
+	//currentDemoProg = demoState->prog_drawTexture_coordManip;
+	//a3shaderProgramCreate(currentDemoProg->program, "prog:draw-tex-coordmanip");
+	//a3shaderProgramAttachShader(currentDemoProg->program, shaderList.passTexcoord_transform_vs->shader);
+	//a3shaderProgramAttachShader(currentDemoProg->program, shaderList.drawTexture_coordManip_fs->shader);
 
-	// 04-multipass programs: 
-	// Phong shading with shadow mapping and MRT
-	currentDemoProg = demoState->prog_drawPhong_multi_shadow_mrt;
-	a3shaderProgramCreate(currentDemoProg->program, "prog:draw-Phong-multi-shadow");
-	a3shaderProgramAttachShader(currentDemoProg->program, shaderList.passLightingData_shadowCoord_transform_vs->shader);
-	a3shaderProgramAttachShader(currentDemoProg->program, shaderList.drawPhong_multi_shadow_mrt_fs->shader);
-	// texturing program with outlines
-	currentDemoProg = demoState->prog_drawTexture_outline;
-	a3shaderProgramCreate(currentDemoProg->program, "prog:draw-tex-outline");
-	a3shaderProgramAttachShader(currentDemoProg->program, shaderList.passTexcoord_transform_vs->shader);
-	a3shaderProgramAttachShader(currentDemoProg->program, shaderList.drawTexture_outline_fs->shader);
+	//// 04-multipass programs: 
+	//// Phong shading with shadow mapping and MRT
+	//currentDemoProg = demoState->prog_drawPhong_multi_shadow_mrt;
+	//a3shaderProgramCreate(currentDemoProg->program, "prog:draw-Phong-multi-shadow");
+	//a3shaderProgramAttachShader(currentDemoProg->program, shaderList.passLightingData_shadowCoord_transform_vs->shader);
+	//a3shaderProgramAttachShader(currentDemoProg->program, shaderList.drawPhong_multi_shadow_mrt_fs->shader);
+	//// texturing program with outlines
+	//currentDemoProg = demoState->prog_drawTexture_outline;
+	//a3shaderProgramCreate(currentDemoProg->program, "prog:draw-tex-outline");
+	//a3shaderProgramAttachShader(currentDemoProg->program, shaderList.passTexcoord_transform_vs->shader);
+	//a3shaderProgramAttachShader(currentDemoProg->program, shaderList.drawTexture_outline_fs->shader);
 
-	// 05-bloom programs: 
-	// texturing with bright-pass or tone-mapping
+	//// 05-bloom programs: 
+	//// texturing with bright-pass or tone-mapping
 	currentDemoProg = demoState->prog_drawTexture_brightPass;
 	a3shaderProgramCreate(currentDemoProg->program, "prog:draw-tex-bright");
 	a3shaderProgramAttachShader(currentDemoProg->program, shaderList.passTexcoord_transform_vs->shader);
 	a3shaderProgramAttachShader(currentDemoProg->program, shaderList.drawTexture_brightPass_fs->shader);
-	// texturing with Gaussian blurring
+	//// texturing with Gaussian blurring
 	currentDemoProg = demoState->prog_drawTexture_blurGaussian;
 	a3shaderProgramCreate(currentDemoProg->program, "prog:draw-tex-blur");
 	a3shaderProgramAttachShader(currentDemoProg->program, shaderList.passTexcoord_transform_vs->shader);
 	a3shaderProgramAttachShader(currentDemoProg->program, shaderList.drawTexture_blurGaussian_fs->shader);
-	// texturing with bloom composition
+	//// texturing with bloom composition
 	currentDemoProg = demoState->prog_drawTexture_blendScreen4;
 	a3shaderProgramCreate(currentDemoProg->program, "prog:draw-tex-blend4");
 	a3shaderProgramAttachShader(currentDemoProg->program, shaderList.passTexcoord_transform_vs->shader);
 	a3shaderProgramAttachShader(currentDemoProg->program, shaderList.drawTexture_blendScreen4_fs->shader);
 
-	// 06-deferred programs: 
-	// draw lighting data as g-buffers
-	currentDemoProg = demoState->prog_drawLightingData;
-	a3shaderProgramCreate(currentDemoProg->program, "prog:draw-lightingdata");
-	a3shaderProgramAttachShader(currentDemoProg->program, shaderList.passLightingData_transform_bias_vs->shader);
-	a3shaderProgramAttachShader(currentDemoProg->program, shaderList.drawLightingData_fs->shader);
-	// draw Phong shading deferred
-	currentDemoProg = demoState->prog_drawPhong_multi_deferred;
-	a3shaderProgramCreate(currentDemoProg->program, "prog:draw-Phong-multi-def");
-	a3shaderProgramAttachShader(currentDemoProg->program, shaderList.passAtlasTexcoord_transform_vs->shader);
-	a3shaderProgramAttachShader(currentDemoProg->program, shaderList.drawPhong_multi_deferred_fs->shader);
-	// draw Phong light volume
-	currentDemoProg = demoState->prog_drawPhongVolume_instanced;
-	a3shaderProgramCreate(currentDemoProg->program, "prog:draw-Phong-volume-inst");
-	a3shaderProgramAttachShader(currentDemoProg->program, shaderList.passBiasedClipCoord_transform_instanced_vs->shader);
-	a3shaderProgramAttachShader(currentDemoProg->program, shaderList.drawPhongVolume_fs->shader);
-	// draw composited Phong shading model
-	currentDemoProg = demoState->prog_drawPhongComposite;
-	a3shaderProgramCreate(currentDemoProg->program, "prog:draw-Phong-composite");
-	a3shaderProgramAttachShader(currentDemoProg->program, shaderList.passAtlasTexcoord_transform_vs->shader);
-	a3shaderProgramAttachShader(currentDemoProg->program, shaderList.drawPhongComposite_fs->shader);
+	//// 06-deferred programs: 
+	//// draw lighting data as g-buffers
+	//currentDemoProg = demoState->prog_drawLightingData;
+	//a3shaderProgramCreate(currentDemoProg->program, "prog:draw-lightingdata");
+	//a3shaderProgramAttachShader(currentDemoProg->program, shaderList.passLightingData_transform_bias_vs->shader);
+	//a3shaderProgramAttachShader(currentDemoProg->program, shaderList.drawLightingData_fs->shader);
+	//// draw Phong shading deferred
+	//currentDemoProg = demoState->prog_drawPhong_multi_deferred;
+	//a3shaderProgramCreate(currentDemoProg->program, "prog:draw-Phong-multi-def");
+	//a3shaderProgramAttachShader(currentDemoProg->program, shaderList.passAtlasTexcoord_transform_vs->shader);
+	//a3shaderProgramAttachShader(currentDemoProg->program, shaderList.drawPhong_multi_deferred_fs->shader);
+	//// draw Phong light volume
+	//currentDemoProg = demoState->prog_drawPhongVolume_instanced;
+	//a3shaderProgramCreate(currentDemoProg->program, "prog:draw-Phong-volume-inst");
+	//a3shaderProgramAttachShader(currentDemoProg->program, shaderList.passBiasedClipCoord_transform_instanced_vs->shader);
+	//a3shaderProgramAttachShader(currentDemoProg->program, shaderList.drawPhongVolume_fs->shader);
+	//// draw composited Phong shading model
+	//currentDemoProg = demoState->prog_drawPhongComposite;
+	//a3shaderProgramCreate(currentDemoProg->program, "prog:draw-Phong-composite");
+	//a3shaderProgramAttachShader(currentDemoProg->program, shaderList.passAtlasTexcoord_transform_vs->shader);
+	//a3shaderProgramAttachShader(currentDemoProg->program, shaderList.drawPhongComposite_fs->shader);
 
 	// 07-curves programs: 
 	// draw Phong forward MRT
@@ -763,43 +777,43 @@ void a3demo_loadShaders(a3_DemoState *demoState)
 	a3shaderProgramCreate(currentDemoProg->program, "prog:draw-Phong-mul-fwd-mrt");
 	a3shaderProgramAttachShader(currentDemoProg->program, shaderList.passTangentBasis_transform_instanced_vs->shader);
 	a3shaderProgramAttachShader(currentDemoProg->program, shaderList.drawPhong_multi_forward_mrt_fs->shader);
-	// draw overlays (tangents & wireframe)
+	//// draw overlays (tangents & wireframe)
 	currentDemoProg = demoState->prog_drawOverlays_tangents_wireframe;
 	a3shaderProgramCreate(currentDemoProg->program, "prog:draw-overlays-tb-wire");
 	a3shaderProgramAttachShader(currentDemoProg->program, shaderList.passTangentBasis_transform_instanced_vs->shader);
 	a3shaderProgramAttachShader(currentDemoProg->program, shaderList.drawOverlays_tangents_wireframe_gs->shader);
 	a3shaderProgramAttachShader(currentDemoProg->program, shaderList.drawColorAttrib_fs->shader);
 	// draw curve segment
-	currentDemoProg = demoState->prog_drawCurveSegment;
+	/*currentDemoProg = demoState->prog_drawCurveSegment;
 	a3shaderProgramCreate(currentDemoProg->program, "prog:draw-curve-segment");
 	a3shaderProgramAttachShader(currentDemoProg->program, shaderList.passthru_vs->shader);
 	a3shaderProgramAttachShader(currentDemoProg->program, shaderList.drawCurveSegment_gs->shader);
-	a3shaderProgramAttachShader(currentDemoProg->program, shaderList.drawColorAttrib_fs->shader);
+	a3shaderProgramAttachShader(currentDemoProg->program, shaderList.drawColorAttrib_fs->shader);*/
 	
 	// 07-keyframes programs: 
 	// draw Phong forward MRT with morphing
-	currentDemoProg = demoState->prog_drawPhong_multi_forward_mrt_morph;
+	//currentDemoProg = demoState->prog_drawPhong_multi_forward_mrt_morph;
 //	a3shaderProgramCreate(currentDemoProg->program, "prog:draw-Phong-mul-morph");
 //	a3shaderProgramAttachShader(currentDemoProg->program, shaderList.passTangentBasis_transform_instanced_morph_vs->shader);
 //	a3shaderProgramAttachShader(currentDemoProg->program, shaderList.drawPhong_multi_forward_mrt_fs->shader);
 	// draw overlays with morphing
-	currentDemoProg = demoState->prog_drawOverlays_tb_wf_morph;
+	//currentDemoProg = demoState->prog_drawOverlays_tb_wf_morph;
 //	a3shaderProgramCreate(currentDemoProg->program, "prog:draw-overlays-tb-wf-morph");
 //	a3shaderProgramAttachShader(currentDemoProg->program, shaderList.passTangentBasis_transform_instanced_morph_vs->shader);
 //	a3shaderProgramAttachShader(currentDemoProg->program, shaderList.drawOverlays_tangents_wireframe_gs->shader);
 //	a3shaderProgramAttachShader(currentDemoProg->program, shaderList.drawColorAttrib_fs->shader);
 	// draw colorized hierarchy
-	currentDemoProg = demoState->prog_drawColorizedHierarchy_instanced;
+	/*currentDemoProg = demoState->prog_drawColorizedHierarchy_instanced;
 	a3shaderProgramCreate(currentDemoProg->program, "prog:draw-color-hierarchy-inst");
 	a3shaderProgramAttachShader(currentDemoProg->program, shaderList.passColor_hierarchy_transform_instanced_vs->shader);
-	a3shaderProgramAttachShader(currentDemoProg->program, shaderList.drawColorAttrib_fs->shader);
+	a3shaderProgramAttachShader(currentDemoProg->program, shaderList.drawColorAttrib_fs->shader);*/
 
 	//final triangle program
 	currentDemoProg = demoState->prog_drawFinal; 
-	a3shaderProgramCreate(currentDemoProg->program, "prog:drawFinal");
-	a3shaderProgramAttachShader(currentDemoProg->program, shaderList.finalvertexshader_vs->shader);
+	a3shaderProgramCreate(currentDemoProg->program, "prog:finalfragshader");
 	a3shaderProgramAttachShader(currentDemoProg->program, shaderList.finalfragshader_fs->shader);
-	a3shaderProgramAttachShader(currentDemoProg->program, shaderList.drawPhong_multi_shadow_mrt_fs->shader);
+	a3shaderProgramAttachShader(currentDemoProg->program, shaderList.finalvertexshader_vs->shader);
+	
 
 
 
@@ -962,6 +976,7 @@ void a3demo_loadTextures(a3_DemoState* demoState)
 			a3_DemoStateTexture texRampDM[1];
 			a3_DemoStateTexture texRampSM[1];
 			a3_DemoStateTexture texChecker[1];
+			a3_DemoStateTexture texEarth2[1]; 
 		};
 	} textureList = {
 		{
@@ -977,6 +992,7 @@ void a3demo_loadTextures(a3_DemoState* demoState)
 			{ demoState->tex_ramp_dm,		"tex:ramp-dm",		"../../../../resource/tex/sprite/celRamp_dm.png" },
 			{ demoState->tex_ramp_sm,		"tex:ramp-sm",		"../../../../resource/tex/sprite/celRamp_sm.png" },
 			{ demoState->tex_checker,		"tex:checker",		"../../../../resource/tex/sprite/checker.png" },
+			{ demoState->tex_earth2,		"tex:earth-dm",		"../../../../resource/tex/earth/2k/earth_dm_2k.png"}
 		}
 	};
 	const a3ui32 numTextures = sizeof(textureList) / sizeof(a3_DemoStateTexture);
@@ -1460,8 +1476,9 @@ void a3demo_refresh(a3_DemoState* demoState)
 	a3_refreshDrawable_internal(demoState->draw_sphere, currentVAO, currentBuff);
 	a3_refreshDrawable_internal(demoState->draw_cylinder, currentVAO, currentBuff);
 	a3_refreshDrawable_internal(demoState->draw_torus, currentVAO, currentBuff);
-	a3_refreshDrawable_internal(demoState->draw_teapot, currentVAO, currentBuff);
 	a3_refreshDrawable_internal(demoState->draw_triangle, currentVAO, currentBuff);
+	a3_refreshDrawable_internal(demoState->draw_teapot, currentVAO, currentBuff);
+	
 
 	a3demo_initDummyDrawable_internal(demoState);
 

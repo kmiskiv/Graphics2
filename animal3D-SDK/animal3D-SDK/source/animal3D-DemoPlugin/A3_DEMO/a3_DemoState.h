@@ -245,15 +245,13 @@ extern "C"
 					sphereObject[1],
 					cylinderObject[1],
 					torusObject[1],
+					triangleObject[1],
 					teapotObject[1];
 
 				 //animating scene objects
 				a3_DemoSceneObject
 					morphObject[1],
 					 skeletonObject[1];
-
-				a3_DemoSceneObject
-					triangleObject[1];
 
 			};
 		};
@@ -337,11 +335,10 @@ extern "C"
 					draw_sphere[1],								// procedural sphere
 					draw_cylinder[1],							// procedural cylinder
 					draw_torus[1],								// procedural torus
+					draw_triangle[1],
 					draw_teapot[1];								// can't not have a Utah teapot
 				a3_VertexDrawable
 					draw_teapot_morph[1];						// a MORPHING UTAH TEAPOT whaaaaaat???
-				a3_VertexDrawable
-					draw_triangle[1];
 			};
 		};
 
@@ -413,7 +410,8 @@ extern "C"
 					tex_stone_dm[1],
 					tex_ramp_dm[1],
 					tex_ramp_sm[1],
-					tex_checker[1];
+					tex_checker[1],
+					tex_earth2[1]; 
 			};
 		};
 

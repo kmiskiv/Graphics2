@@ -166,6 +166,7 @@ void a3shading_render(a3_DemoState const* demoState, a3_Demo_Shading const* demo
 		demoState->draw_sphere,
 		demoState->draw_cylinder,
 		demoState->draw_torus,
+		demoState->draw_triangle,
 		demoState->draw_teapot,
 	};
 
@@ -176,6 +177,7 @@ void a3shading_render(a3_DemoState const* demoState, a3_Demo_Shading const* demo
 		demoState->tex_stone_dm,
 		demoState->tex_mars_dm,
 		demoState->tex_checker,
+		demoState->tex_earth2,
 	};
 	const a3_Texture* texture_sm[] = {
 		demoState->tex_stone_dm,
@@ -183,6 +185,7 @@ void a3shading_render(a3_DemoState const* demoState, a3_Demo_Shading const* demo
 		demoState->tex_stone_dm,
 		demoState->tex_mars_sm,
 		demoState->tex_checker,
+		demoState->tex_earth2,
 	};
 
 	// forward pipeline shader programs

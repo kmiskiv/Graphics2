@@ -18,20 +18,17 @@
 	animal3D SDK: Minimal 3D Animation Framework
 	By Daniel S. Buckstein
 	
-	drawColorAttrib_fs4x.glsl
-	Draw color attribute passed from prior stage as varying.
+	drawColorUnif_fs4x.glsl
+	Draw uniform solid color.
 */
 
 #version 410
 
 out vec4 rtFragColor;
-
-//the trick to varying -- make sure they have the same name as the output in the previous stage
-in vec4 vColor; 
+uniform vec4 uColor; 
 
 void main()
 {
-	// DUMMY OUTPUT: all fragments are OPAQUE RED
-	rtFragColor = vec4(1.0, 0.0, 0.0, 1.0);
-	//rtFragColor = vColor; 
+	rtFragColor = uColor; 
 }
+

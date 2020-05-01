@@ -203,6 +203,7 @@ void a3demo_update_scene(a3_DemoState *demoState, a3f64 dt)
 	a3demo_applyScale_internal(demoState->sphereObject, scaleMat.m);
 	a3demo_applyScale_internal(demoState->cylinderObject, scaleMat.m);
 	a3demo_applyScale_internal(demoState->torusObject, scaleMat.m);
+	a3demo_applyScale_internal(demoState->triangleObject, scaleMat.m);
 	a3demo_applyScale_internal(demoState->teapotObject, scaleMat.m);
 }
 

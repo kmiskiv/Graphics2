@@ -224,6 +224,7 @@ void a3triangle_render(a3_DemoState const* demoState, a3_Demo_Triangle const* de
 		demoState->tex_stone_dm,
 		demoState->tex_mars_dm,
 		demoState->tex_checker,
+		demoState->tex_earth2,
 	};
 
 
@@ -234,6 +235,7 @@ void a3triangle_render(a3_DemoState const* demoState, a3_Demo_Triangle const* de
 		demoState->tex_stone_dm,
 		demoState->tex_mars_sm,
 		demoState->tex_checker,
+		demoState->tex_earth2,
 
 	};
 
